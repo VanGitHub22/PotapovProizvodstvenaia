@@ -1,22 +1,38 @@
-let browser = prompt()
-if(browser == "Edge"){
-    alert( "You've got the Edge!" );
-} else if(browser == "Chrome" || browser == "Firefox" || browser == "Safari" || browser == "Opera"){
-    alert( 'Okay we support these browsers too' );
-} else {
-    alert( 'We hope that this page looks ok!' );
+function checkAge(age) {
+  if (age > 18) {
+    return true;
+  }
+  return confirm('Родители разрешили?'); // работает, так как всегда выполняется только один return
 }
 
-const number = +prompt('Введите число между 0 и 3', '');
-switch(number){
-    case(0):
-        alert('Вы ввели число 0');
-        break;
-    case(1):
-        alert('Вы ввели число 1');
-        break;
-    case(2):
-    case(3):
-        alert('Вы ввели число 2, а может и 3');
-        break;
+
+function checkAge(age) {
+    return age > 18 ? true : confirm('Родители разрешили?');
+}
+
+function checkAge(age) {
+  return (age > 18) || confirm('Родители разрешили?');
+}
+
+
+function min(a, b){
+    return a > b ? a : b 
+}
+
+
+
+function pow(x, n){
+    let y = x;
+    for(let i = 1; i < n; i++){
+        y *= x 
+    }
+    return y
+}
+
+let x = +prompt("x")
+let n = +prompt("n")
+if(n >= 1 && n % 1 == 0){
+    alert(pow(x, n))
+} else {
+    alert(`Степень должна быть натуральным числом`);
 }
