@@ -1,53 +1,24 @@
-let user = {}
-user.name = "John";
-user.surname = "Smith";
-user.name = "Pete";
-delete user.name;
-
-function isEmpty(obj){
-  for(let key in obj){
-    return false;
-  }
-  return true;
-}
-
-
-const user1 = {
-  name: "John"
-};
-// это будет работать? // да, мы изменяем свойство, а не константу
-user1.name = "Pete";
-
-
-let salaries = {
-  John: 100,
-  Ann: 160,
-  Pete: 130
-}
-
-let sum = 0;
-
-for(salary in salaries){
-  sum += salaries[salary];
-}
-console.log(sum)
-
-
-
-let menu = {
-  width: 200,
-  height: 300,
-  title: "My menu"
+let user = {
+  name: "John",
+  age: 30
 };
 
-multiplyNumeric(menu);
+let clone = {}; // новый пустой объект
 
-
-function multiplyNumeric(men){
-  for(key in men){
-    if(typeof(men[key]) == "number"){
-      men[key] *= 2;
-    }
-  }
+// давайте скопируем все свойства user в него
+for (let key in user) {
+  clone[key] = user[key];
 }
-console.log(menu)
+
+
+
+let user2 = { name: "John" };
+
+let permissions1 = { canView: true };
+let permissions2 = { canEdit: true };
+
+// копируем все свойства из permissions1 и permissions2 в user
+Object.assign(user2, permissions1, permissions2);
+
+
+let clone1 = Object.assign({}, user); // полное копирование
