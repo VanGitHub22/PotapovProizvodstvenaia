@@ -121,7 +121,7 @@ function delay(f, ms) {
 f1000("test"); // показывает "test" после 1000 мс
 
 
-
+*/
 
 
 function debounce(func, ms) {
@@ -138,7 +138,7 @@ f("a");
 setTimeout( () => f("b"), 200);
 setTimeout( () => f("c"), 500);
 
-
+/*
 
 
 

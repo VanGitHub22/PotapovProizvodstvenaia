@@ -32,7 +32,7 @@ let bound = sayHi.bind({
 
 alert( bound.test ); // undefined, свойства test нет
 
-
+*/
 
 function askPassword(ok, fail) {
   let password = prompt("Password?", '');
@@ -53,9 +53,9 @@ let user = {
 
 };
 
-askPassword(user.loginOk.bind(user), user.loginFail.bind(user));*/
+askPassword(user.loginOk.bind(user), user.loginFail.bind(user));
 
-
+/*
 
 
 function askPassword(ok, fail) {
@@ -72,4 +72,4 @@ let user = {
   }
 };
 
-askPassword(user.login.bind(user, true), user.login.bind(user, false));
+askPassword(user.login.bind(user, true), user.login.bind(user, false));*/
