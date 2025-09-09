@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+      table {
+        border-collapse: collapse;
+      }
+
+      td,
+      th {
+        border: 1px solid black;
+        padding: 3px;
+        text-align: center;
+      }
+
+      th {
+        font-weight: bold;
+        background-color: #E6E6E6;
+      }
+      .hour {
+        color: red
+      }
+
+      .min {
+        color: green
+      }
+
+      .sec {
+        color: blue
+      }
+    </style>
+    <title>Document</title>
+</head>
+<body>
+  <ol id="elem">
+    <li>Привет</li>
+    <li>Мир</li>
+  </ol>
+
+
+  <!--<table id="table">
+    aaa
+    <tr>
+      <td>Тест</td>
+    </tr>
+  </table>-->
+
+
+  <div id="container"></div>
+
+
+
+
+  <ul>
+    <li>Животные
+      <ul>
+        <li>Млекопитающие
+          <ul>
+            <li>Коровы</li>
+            <li>Ослы</li>
+            <li>Собаки</li>
+            <li>Тигры</li>
+          </ul>
+        </li>
+        <li>Другие
+          <ul>
+            <li>Змеи</li>
+            <li>Птицы</li>
+            <li>Ящерицы</li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+    <li>Рыбы
+      <ul>
+        <li>Аквариумные
+          <ul>
+            <li>Гуппи</li>
+            <li>Скалярии</li>
+          </ul>
+        </li>
+        <li>Морские
+          <ul>
+            <li>Морская форель</li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+  </ul>
+
+
+
+  <div id="calendar"></div>
+  <input type="button" onclick="clockStart()" value="Start">
+  <input type="button" onclick="clockStop()" value="Stop">
+
+
+  <div id="clock">
+    <span class="hour">hh</span>:<span class="min">mm</span>:<span class="sec">ss</span>
+  </div>
+
+
+
+  <ul id="ul">
+    <li id="one">1</li>
+    <li id="two">4</li>
+  </ul>
+
+
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th><th>Surname</th><th>Age</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>John</td><td>Smith</td><td>10</td>
+      </tr>
+      <tr>
+        <td>Pete</td><td>Brown</td><td>15</td>
+      </tr>
+      <tr>
+        <td>Ann</td><td>Lee</td><td>5</td>
+      </tr>
+      <tr>
+        <td>...</td><td>...</td><td>...</td>
+      </tr>
+    </tbody>
+  </table>
+</body>
+<script src="script.js"></script>
+</html>
