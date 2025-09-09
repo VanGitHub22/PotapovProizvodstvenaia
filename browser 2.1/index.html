@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        /*#field {
+            width: 200px;
+            height: 150px;
+            border: 10px solid black;
+            background-color: #00FF00;
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+        }
+
+        #ball {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 40px;
+            height: 40px;
+            transition: all 1s;
+        }
+
+        .menu ul {
+            margin: 0;
+            list-style: none;
+            padding-left: 20px;
+            display: none;
+        }
+
+        .menu .title::before {
+            content: '▶ ';
+            font-size: 80%;
+            color: green;
+        }
+
+        .menu.open .title::before {
+            content: '▼ ';
+        }
+
+        .menu.open ul {
+            display: block;
+        }
+
+        body {
+            margin: 10px auto;
+            width: 470px;
+        }
+
+        h3 {
+            margin: 0;
+            padding-bottom: .3em;
+            padding-right: 20px;
+            font-size: 1.1em;
+        }
+
+        p {
+            margin: 0;
+            padding: 0 0 .5em;
+        }
+
+        .pane {
+            background: #edf5e1;
+            padding: 10px 20px 10px;
+            border-top: solid 2px #c4df9b;
+            position: relative;
+        }
+
+        .remove-button {
+            position: absolute;
+            font-size: 110%;
+            top: 0;
+            color: darkred;
+            right: 10px;
+            display: block;
+            width: 24px;
+            height: 24px;
+            border: none;
+            background: transparent;
+            cursor: pointer;
+        }*/
+
+        body {
+        padding: 10px;
+        }
+
+        .carousel {
+        position: relative;
+        width: 398px;
+        padding: 10px 40px;
+        border: 1px solid #CCC;
+        border-radius: 15px;
+        background: #eee;
+        }
+
+        .carousel img {
+        width: 130px;
+        height: 130px;
+        /* делаем этот элемент блочным, чтобы убрать лишнее пространство вокруг картинок */
+        display: block;
+        }
+
+        .arrow {
+        position: absolute;
+        top: 60px;
+        padding: 0;
+        background: #ddd;
+        border-radius: 15px;
+        border: 1px solid gray;
+        font-size: 24px;
+        line-height: 24px;
+        color: #444;
+        display: block;
+        }
+
+        .arrow:focus {
+        outline: none;
+        }
+
+        .arrow:hover {
+        background: #ccc;
+        cursor: pointer;
+        }
+
+        .prev {
+        left: 7px;
+        }
+
+        .next {
+        right: 7px;
+        }
+
+        .gallery {
+        width: 390px;
+        overflow: hidden;
+        }
+
+        .gallery ul {
+        height: 130px;
+        width: 9999px;
+        margin: 0;
+        padding: 0;
+        list-style: none;
+        transition: margin-left 250ms;
+        /* удаляем пустое пространство между элементами li, у которых установлен inline-block */
+        /* http://davidwalsh.name/remove-whitespace-inline-block */
+        font-size: 0;
+        }
+
+        .gallery li {
+        display: inline-block;
+        }
+
+    </style>
+    <title>Document</title>
+</head>
+<body><!--
+    <input type="button" id="hider" value="Нажмите, чтобы спрятать текст" />
+
+    <div id="text">Текст</div>
+
+    <input type="button" onclick="this.hidden=true" value="Нажми, чтобы спрятать">
+
+
+    Нажмите на поле для перемещения мяча.
+  <br>
+
+
+  <div id="field">
+    <img src="https://ru.js.cx/clipart/ball.svg" id="ball"> . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+    . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+  </div>
+
+    <div id="sweeties" class="menu">
+        <span class="title">Сладости (нажми меня)!</span>
+        <ul>
+            <li>Пирожное</li>
+            <li>Пончик</li>
+            <li>Мёд</li>
+        </ul>
+
+    </div>
+    
+
+    <div>
+        <div class="pane">
+            <h3>Лошадь</h3>
+            <p>Домашняя лошадь — животное семейства непарнокопытных, одомашненный и единственный сохранившийся подвид дикой лошади, вымершей в дикой природе, за исключением небольшой популяции лошади Пржевальского.</p>
+        </div>
+        <div class="pane">
+            <h3>Осёл</h3>
+            <p>Домашний осёл (лат. Equus asinus asinus), или ишак, — одомашненный подвид дикого осла (Equus asinus), сыгравший важную историческую роль в развитии хозяйства и культуры человека и по-прежнему широко в хозяйстве многих развивающихся стран.</p>
+        </div>
+        <div class="pane">
+            <h3>Кошка</h3>
+            <p>Кошка, или домашняя кошка (лат. Felis silvestris catus), — домашнее животное, одно из наиболее популярных(наряду с собакой) «животных-компаньонов». Являясь одиночным охотником на грызунов и других мелких животных, кошка — социальное животное, использующее для общения широкий диапазон звуковых сигналов.</p>
+        </div>
+    </div>-->
+
+    <div id="carousel" class="carousel">
+        <button class="arrow prev">⇦</button>
+        <div class="gallery">
+            <ul>
+                <li><img src="https://ru.js.cx/carousel/1.png"></li>
+                <li><img src="https://ru.js.cx/carousel/2.png"></li>
+                <li><img src="https://ru.js.cx/carousel/3.png"></li>
+                <li><img src="https://ru.js.cx/carousel/4.png"></li>
+                <li><img src="https://ru.js.cx/carousel/5.png"></li>
+                <li><img src="https://ru.js.cx/carousel/6.png"></li>
+                <li><img src="https://ru.js.cx/carousel/7.png"></li>
+                <li><img src="https://ru.js.cx/carousel/8.png"></li>
+                <li><img src="https://ru.js.cx/carousel/9.png"></li>
+                <li><img src="https://ru.js.cx/carousel/10.png"></li>
+            </ul>
+        </div>
+        <button class="arrow next">⇨</button>
+    </div>
+
+</body>
+<script src="script.js"></script>
+</html>
