@@ -1,0 +1,181 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+
+*{
+    font-family: "Montserrat", sans-serif;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body{
+    background: #F1F2F2;
+}
+
+header{
+    height: 50px;
+    width: 100%;
+    background: #E8E8E8;
+}
+
+.container{
+    margin: 0 auto;
+    width: 65%;
+}
+
+main{
+    margin-top: 150px;
+}
+
+table{
+    width: 100%;
+}
+
+table tr{
+    height: 37px;
+}
+
+table tr td:nth-child(1){
+    width: 350px;
+}
+
+table tr td:nth-child(2){
+    width: 130px;
+}
+
+table tr td:nth-child(3){
+    width: 150px;
+}
+
+table tr td:nth-child(4){
+    width: 220px;
+}
+
+table tr td:nth-child(5){
+    width: 110px;
+}
+
+table tr td:nth-child(6){
+    width: 200px;
+}
+
+table tr td:nth-child(7){
+    background: #4579FF;
+    border-radius: 3px;
+    padding: 3px;
+}
+
+table tr td:nth-child(7) img{
+    display: block;
+}
+
+table tr td:nth-child(8){
+    background: #FF7171;
+    border-radius: 3px;
+    padding: 3px;
+}
+
+table tr td:nth-child(8) img{
+    display: block;
+}
+
+td input{
+    width: 100%;
+    outline: none;
+    border: none;
+    padding: 9px 7px;
+    border-radius: 3px;
+}
+
+.btn_costPrice{
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+}
+
+.more{
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.more img{
+    height: 10px;
+    width: 12px;
+}
+
+.graphics{
+    margin-top: 20px;
+}
+
+.graph1{
+    border-bottom: 1px solid #aaaaaa;
+    width: 500px;
+    display: flex;
+}
+
+.points{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.point{
+    margin-bottom: 50px;
+    display: block;
+}
+
+.columnarGraph{
+    border: 1px solid #000;
+    width: 445px;
+    align-items: end;
+    display: flex;
+}
+
+.green{
+    height: 200px;
+    background: #45FF4B;
+    width: 30px;
+    margin-left: 30px;
+}
+
+.orange{
+    height: 150px;
+    background: #FFC445;
+    width: 30px;
+    margin-left: 30px;
+}
+
+.red{
+    height: 230px;
+    background: #FF7745;
+    width: 30px;
+    margin-left: 30px;
+}
+
+.purple{
+    height: 170px;
+    background: #BB45FF;
+    width: 30px;
+    margin-left: 30px;
+}
+
+.yellow{
+    height: 250px;
+    background: #FFF945;
+    width: 30px;
+    margin-left: 30px;
+}
+
+.blue{
+    height: 70px;
+    background: #4579FF;
+    width: 30px;
+    margin-left: 30px;
+}
+
+.darkblue{
+    height: 140px;
+    background: #153483;
+    width: 30px;
+    margin-left: 30px;
+}
