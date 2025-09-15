@@ -5,6 +5,7 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    transition: .2s ease-in-out;
 }
 
 body{
@@ -160,42 +161,128 @@ td input{
     height: 150px;
     background: #FFC445;
     width: 30px;
-    margin-left: 30px;
+    margin-left: 27px;
 }
 
 .red{
     height: 230px;
     background: #FF7745;
     width: 30px;
-    margin-left: 30px;
+    margin-left: 27px;
 }
 
 .purple{
     height: 170px;
     background: #BB45FF;
     width: 30px;
-    margin-left: 30px;
+    margin-left: 27px;
 }
 
 .yellow{
     height: 250px;
     background: #FFF945;
     width: 30px;
-    margin-left: 30px;
+    margin-left: 27px;
 }
 
 .blue{
     height: 70px;
     background: #4579FF;
     width: 30px;
-    margin-left: 30px;
+    margin-left: 27px;
 }
 
 .darkblue{
     height: 140px;
     background: #153483;
     width: 30px;
-    margin-left: 30px;
+    margin-left: 27px;
+}
+
+
+
+
+.green2{
+    height: 350px;
+    background: #45FF4B;
+    width: 20px;
+}
+
+.orange2{
+    height: 150px;
+    background: #FFC445;
+    width: 20px;
+    margin-left: 25px;
+}
+
+.red2{
+    height: 230px;
+    background: #FF7745;
+    width: 20px;
+    margin-left: 25px;
+}
+
+.purple2{
+    height: 170px;
+    background: #BB45FF;
+    width: 20px;
+    margin-left: 25px;
+}
+
+.yellow2{
+    height: 250px;
+    background: #FFF945;
+    width: 20px;
+    margin-left: 25px;
+}
+
+.blue2{
+    height: 70px;
+    background: #4579FF;
+    width: 20px;
+    margin-left: 25px;
+}
+
+.darkblue2{
+    height: 140px;
+    background: #153483;
+    width: 20px;
+    margin-left: 25px;
+}
+
+.lightblue{
+    height: 230px;
+    background: #45ffc1;
+    width: 20px;
+    margin-left: 25px;
+}
+
+.darkpurple{
+    height: 170px;
+    background: #451a5e;
+    width: 20px;
+    margin-left: 25px;
+}
+
+.darkdarkpurple{
+    height: 250px;
+    background: #1a0049;
+    width: 20px;
+    margin-left: 25px;
+}
+
+.darkgreen{
+    height: 70px;
+    background: #00420b;
+    width: 20px;
+    margin-left: 25px;
+}
+
+.darkpink{
+    height: 140px;
+    background: #5c0045;
+    width: 20px;
+    margin-left: 25px;
 }
 
 
@@ -246,4 +333,53 @@ footer{
     margin-top: 50px;
     height: 50px;
     background: #E8E8E8;
+}
+
+.allGraphics{
+    display: flex;
+    align-items: center; 
+    justify-content: space-between;
+}
+
+
+
+.graphics2{
+    margin-top: 20px;
+}
+
+.graph2{
+    border-bottom: 1px solid #aaaaaa;
+    width: 650px;
+    display: flex;
+}
+
+.points2{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100px;
+}
+
+.point2{
+    margin-bottom: 30px;
+    display: block;
+}
+
+.columnarGraph2{
+    border: 1px solid #0000002c;
+    padding-left: 10px;
+    width: 550px;
+    align-items: end;
+    display: flex;
+}
+
+.dates2{
+    margin-top: 20px;
+    display: flex;
+    margin-left: 110px;
+}
+
+.date2{
+    transform: rotate(45deg);
+    width: 45px;
 }

@@ -76,6 +76,7 @@ function displaySales(){
     let columnarGraph = document.querySelector(".columnarGraph")
     columnarGraph.innerHTML = ""
     createColumnGraph(2025)
+    createColumnGraph2(2025)
   }
 
   request.onerror = function () {
@@ -302,7 +303,7 @@ function createColumnGraph(year){
       if(sale.revenue > max){
         max = sale.revenue
       }
-      dates.push(sale.date)
+      dates.push(sale.name)
     })
 
     let AllPoints = document.querySelectorAll(".points .point")
@@ -359,3 +360,76 @@ colGraphSelect.addEventListener('change', () => {
   let value = colGraphSelect.value
   createColumnGraph(Number(value))
 })
+
+let colGraphSelect2 = document.querySelector("#colGraphSelect2")
+colGraphSelect2.addEventListener('change', () => {
+  let value = colGraphSelect2.value
+  createColumnGraph2(Number(value))
+})
+
+
+
+function createColumnGraph2(year){
+  let transaction = db.transaction(['Sales'], 'readonly')
+  let sales = transaction.objectStore('Sales')
+  let request = sales.getAll()
+
+  request.onsuccess = function () {
+    let result = request.result
+    let salesInChoosedYear = result.filter(sale => {
+      let date = stringToDate(sale.date);
+      return date.getFullYear() === year;
+    });
+    let perMonth = {jan: 0, feb: 0, mar: 0, apr: 0, may: 0, jun: 0, jul: 0, aug: 0, sep: 0, okt: 0, nov: 0, dec: 0}
+    const monthKeys = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'okt', 'nov', 'dec'];
+    salesInChoosedYear.sort((a, b) => {
+      let [dayA, monthA, yearA] = a.date.split('.').map(Number);
+      let [dayB, monthB, yearB] = b.date.split('.').map(Number);
+
+      let dateA = new Date(yearA, monthA - 1, dayA);
+      let dateB = new Date(yearB, monthB - 1, dayB);
+
+      return dateA - dateB;
+    });
+    for (let el of salesInChoosedYear) {
+      let [day, month, year] = el.date.split('.').map(Number);
+      let monthIndex = month - 1;
+      let monthName = monthKeys[monthIndex];
+      perMonth[monthName] += el.revenue;
+    }
+    console.log(perMonth)
+    let max = 0
+    let dates = []
+
+    Object.values(perMonth).forEach(revenue => {
+      if(revenue > max){
+        max = revenue
+      }
+    })
+
+    let AllPoints = document.querySelectorAll(".points2 .point2")
+    let g = 1
+    AllPoints.forEach((point => {
+      point.innerHTML = `${Math.round(max * g)} -`
+      g -= 0.14
+    }))
+    
+
+    let colGraphElements = ["green2", "orange2", "red2", "purple2", "yellow2", "blue2", "darkblue2", "lightblue", "darkpurple", "darkdarkpurple", "darkgreen", "darkpink"]
+    let i = 0;
+    let columnarGraph = document.querySelector(".columnarGraph2")
+    columnarGraph.innerHTML = ""
+    Object.values(perMonth).forEach(revenue => {
+      let percent = revenue / (max / 100) 
+      let graphBlock = document.createElement("div")
+      graphBlock.classList.add(colGraphElements[i]) 
+      graphBlock.style.height = 350 * (percent / 100) + "px"
+      columnarGraph.appendChild(graphBlock)
+      i++
+    })
+  }
+
+  request.onerror = function () {
+    console.error("Ошибка при загрузке продаж:", request.error);
+  };
+}
