@@ -7,7 +7,7 @@
     <title>Document</title>
 </head>
 <body>
-    <header></header>
+    <header><p>Управление и анализ продаж товаров</p></header>
     <main>
         <div class="container">
             <div class="main_inner">
@@ -23,68 +23,106 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td><input placeholder="Наименование товара" name="name"></input></td>
-                            <td><input placeholder="Цена" name="price"></input></td>
-                            <td><input placeholder="Себестоимость" name=""></input></td>
-                            <td><input placeholder="Дата продажи" name="costPrice"></input></td>
-                            <td><input placeholder="Количество" name="count"></input></td>
-                            <td><input placeholder="Выручка" name="revenue"></input></td>
-                            <td><div class="edit_btn"><img src="./img/pen.png" alt=""></div></td>
-                            <td><div class="delete_btn"><img src="./img/trash.png" alt=""></div></td>
-                        </tr>
-                        <tr>
-                            <td><input placeholder="Наименование товара" name="name"></input></td>
-                            <td><input placeholder="Цена" name="price"></input></td>
-                            <td><input placeholder="Себестоимость" name=""></input></td>
-                            <td><input placeholder="Дата продажи" name="costPrice"></input></td>
-                            <td><input placeholder="Количество" name="count"></input></td>
-                            <td><input placeholder="Выручка" name="revenue"></input></td>
-                            <td><div class="edit_btn"><img src="./img/pen.png" alt=""></div></td>
-                            <td><div class="delete_btn"><img src="./img/trash.png" alt=""></div></td>
-                        </tr>
-                        <tr>
-                            <td><input placeholder="Наименование товара" name="name"></input></td>
-                            <td><input placeholder="Цена" name="price"></input></td>
-                            <td><input placeholder="Себестоимость" name=""></input></td>
-                            <td><input placeholder="Дата продажи" name="costPrice"></input></td>
-                            <td><input placeholder="Количество" name="count"></input></td>
-                            <td><input placeholder="Выручка" name="revenue"></input></td>
-                            <td><div class="edit_btn"><img src="./img/pen.png" alt=""></div></td>
-                            <td><div class="delete_btn"><img src="./img/trash.png" alt=""></div></td>
-                        </tr>
                     </tbody>
                 </table>
                 <div class="btn_costPrice">
-                    <div class="help_block"></div>
-                    <div class="more"><p>Показать еще</p><img src="./img/Polygon.png" alt=""></div>
+                    <div class="add_btn">Добавить продажу</div>
+                    <div class="more" data-open="closed"><p>Показать еще</p><img src="./img/Polygon.png" alt=""></div>
                     <div class="costPrice"><p>Прибыль: 86800р</p></div>
                 </div>
+                
 
                 <div class="graphics">
                     <div class="graph1">
                         <div class="points">
-                            <div class="point">5000 -</div>
-                            <div class="point">4000 -</div>
-                            <div class="point">3000 -</div>
-                            <div class="point">2000 -</div>
-                            <div class="point">1000 -</div>
+                            <div class="point point7">7000 -</div>
+                            <div class="point point6">6000 -</div>
+                            <div class="point point5">5000 -</div>
+                            <div class="point point4">4000 -</div>
+                            <div class="point point3">3000 -</div>
+                            <div class="point point2">2000 -</div>
+                            <div class="point point1">1000 -</div>
                             <div class="point0">0 -</div>
                         </div>
                         <div class="columnarGraph">
-                            <div class="green"></div>
-                            <div class="orange"></div>
-                            <div class="red"></div>
-                            <div class="purple"></div>
-                            <div class="yellow"></div>
-                            <div class="blue"></div>
-                            <div class="darkblue"></div>
+                            
                         </div>
                     </div>
+                    <div class="dates">
+                        <div class="date date1">01.01.1970</div>
+                        <div class="date date2">01.01.1970</div>
+                        <div class="date date3">01.01.1970</div>
+                        <div class="date date4">01.01.1970</div>
+                        <div class="date date5">01.01.1970</div>
+                        <div class="date date6">01.01.1970</div>
+                        <div class="date date7">01.01.1970</div>
+                    </div>
                 </div>
+                <select id="colGraphSelect">
+                    <option value="2025">2025</option>
+                    <option value="2024">2024</option>
+                </select>
             </div>
         </div>
+        <div id="editModal" class="modal" style="display: none;">
+            <div class="modal-content">
+                <h3>Редактировать продажу</h3>
+                <form id="editForm">
+                    <input type="hidden" id="edit-id">
+
+                    <label>Наименование:</label>
+                    <input type="text" id="edit-name" required>
+
+                    <label>Цена:</label>
+                    <input type="number" id="edit-price" required>
+
+                    <label>Себестоимость:</label>
+                    <input type="number" id="edit-costPrice" required>
+
+                    <label>Количество:</label>
+                    <input type="number" id="edit-count" required>
+
+                    <label>Дата:</label>
+                    <input type="text" id="edit-date" required>
+
+                    <div style="margin-top: 10px;">
+                        <button type="submit">Сохранить</button>
+                        <button type="button" id="closeModal">Отмена</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div id="addModal" class="modal" style="display: none;">
+            <div class="modal-content">
+                <h3>Редактировать продажу</h3>
+                <form id="addForm">
+
+                    <label>Наименование:</label>
+                    <input type="text" id="add-name" required>
+
+                    <label>Цена:</label>
+                    <input type="number" id="add-price" required>
+
+                    <label>Себестоимость:</label>
+                    <input type="number" id="add-costPrice" required>
+
+                    <label>Количество:</label>
+                    <input type="number" id="add-count" required>
+
+                    <label>Дата:</label>
+                    <input type="text" id="add-date" required>
+
+                    <div style="margin-top: 10px;">
+                        <button type="submit">Сохранить</button>
+                        <button type="button" id="closeModalAdd">Отмена</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div id="modalOverlay" class="modal-overlay" style="display: none;"></div>
     </main>
+    <footer><p>Авиатехникум</p></footer>
 </body>
-<script src="./script.js"></script>
+<script type="module" src="DB/database.js"></script>
+<script type="module" src="script.js"></script>
 </html>

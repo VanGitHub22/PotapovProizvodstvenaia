@@ -1,20 +1,25 @@
-class Sales {
-    constructor(params){
-        if(params.hasOwnProperty('name')) this.name = name
-        else this.name = NULL
-        if(params.hasOwnProperty('price')) this.price = price
-        else this.price = NULL
-        if(params.hasOwnProperty('costPrice')) this.costPrice = costPrice
-        else this.costPrice = NULL
-        if(params.hasOwnProperty('date')) this.date = date
-        else this.date = NULL
-        if(params.hasOwnProperty('count')) this.count = count
-        else this.count = NULL
-        if(params.hasOwnProperty('price') && params.hasOwnProperty('costPrice')) 
-            this.revenue = price - costPrice
-        else 
-            this.revenue = NULL
-    }
+export class Sale {
+  constructor(data) {
+    this.id = data.id || null;
+    this.name = data.name; // Наименование товара
+    this.salePrice = Number(data.salePrice); // Цена продажи
+    this.costPrice = Number(data.costPrice); // Себестоимость
+    this.quantity = Number(data.quantity); // Количество
+    this.date = data.date || new Date().toISOString().split('T')[0]; // Дата
+  }
 
-    
+  // Прибыль с одной единицы
+  get profitPerUnit() {
+    return this.salePrice - this.costPrice;
+  }
+
+  // Общая прибыль
+  get totalProfit() {
+    return this.profitPerUnit * this.quantity;
+  }
+
+  // Выручка
+  get revenue() {
+    return this.salePrice * this.quantity;
+  }
 }

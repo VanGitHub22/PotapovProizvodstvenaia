@@ -12,8 +12,10 @@ body{
 }
 
 header{
+    display: flex;
+    align-items: center;
+    justify-content: center;
     height: 50px;
-    width: 100%;
     background: #E8E8E8;
 }
 
@@ -23,7 +25,7 @@ header{
 }
 
 main{
-    margin-top: 150px;
+    margin-top: 100px;
 }
 
 table{
@@ -89,6 +91,7 @@ td input{
 .btn_costPrice{
     display: flex;
     justify-content: space-between;
+    align-items: center;
     margin-top: 10px;
 }
 
@@ -96,11 +99,25 @@ td input{
     display: flex;
     align-items: center;
     gap: 5px;
+    cursor: pointer;
 }
 
 .more img{
     height: 10px;
     width: 12px;
+}
+
+.add_btn{
+    cursor: pointer;
+    background: #4579FF;
+    border-radius: 3px;
+    padding: 10px;
+    width: max-content;
+    color: #fff;
+}
+
+.costPrice{
+    display: block;
 }
 
 .graphics{
@@ -109,7 +126,7 @@ td input{
 
 .graph1{
     border-bottom: 1px solid #aaaaaa;
-    width: 500px;
+    width: 550px;
     display: flex;
 }
 
@@ -117,25 +134,26 @@ td input{
     display: flex;
     flex-direction: column;
     align-items: center;
+    width: 100px;
 }
 
 .point{
-    margin-bottom: 50px;
+    margin-bottom: 30px;
     display: block;
 }
 
 .columnarGraph{
-    border: 1px solid #000;
+    border-left: 1px solid #0000002c;
+    padding-left: 10px;
     width: 445px;
     align-items: end;
     display: flex;
 }
 
 .green{
-    height: 200px;
+    height: 350px;
     background: #45FF4B;
     width: 30px;
-    margin-left: 30px;
 }
 
 .orange{
@@ -178,4 +196,54 @@ td input{
     background: #153483;
     width: 30px;
     margin-left: 30px;
+}
+
+
+
+.modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+  z-index: 1000;
+  width: 400px;
+}
+
+.modal-overlay {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(0,0,0,0.5);
+  z-index: 999;
+}
+
+.modal input {
+  width: 100%;
+  margin-bottom: 10px;
+  padding: 8px;
+}
+
+.dates{
+    margin-top: 20px;
+    display: flex;
+    margin-left: 110px;
+}
+
+.date{
+    transform: rotate(45deg);
+    width: 60px;
+}
+
+
+footer{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 50px;
+    height: 50px;
+    background: #E8E8E8;
 }
