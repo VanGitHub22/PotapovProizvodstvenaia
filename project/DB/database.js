@@ -22,16 +22,16 @@ function formatDate(date) {
   return `${date.getDate()}.${date.getMonth() + 1}.${date.getFullYear()}`;
 }
 
+let add_btn = document.querySelector(".add_btn")
+add_btn.addEventListener("click", () => {
+  document.getElementById('editModal').dataset.action = "add"
+  document.getElementById('editModal').style.display = 'block';
+  document.getElementById('modalOverlay').style.display = 'block';
+})
 
 let closeModal = document.getElementById("closeModal")
 closeModal.addEventListener('click', () => {
   document.getElementById('editModal').style.display = 'none';
-  document.getElementById('modalOverlay').style.display = 'none';
-})
-
-let closeModalAdd = document.getElementById("closeModalAdd")
-closeModalAdd.addEventListener('click', () => {
-  document.getElementById('addModal').style.display = 'none';
   document.getElementById('modalOverlay').style.display = 'none';
 })
 
@@ -78,7 +78,7 @@ function displaySales(){
       for(let edit_btn of edit_Btns){
         if(edit_btn.dataset.id == sale.id){
           edit_btn.onclick = function() {
-            openEditModal(sale.id);
+            openModal(sale.id, "edit");
           }
         }
       }
@@ -127,71 +127,117 @@ function deleteSale(id, callback) {
 }
 
 
-function openEditModal(id) {
+function openModal(id, action) {
   let transaction = db.transaction(['Sales'], 'readonly');
   let sales = transaction.objectStore('Sales');
 
   let request = sales.get(id);
-
-  request.onsuccess = function () {
-    let sale = request.result;
-    document.getElementById('edit-id').value = sale.id;
-    document.getElementById('edit-name').value = sale.name;
-    document.getElementById('edit-price').value = sale.price;
-    document.getElementById('edit-costPrice').value = sale.costPrice;
-    document.getElementById('edit-count').value = sale.count;
-    document.getElementById('edit-date').value = sale.date;
-
-    document.getElementById('editModal').style.display = 'block';
-    document.getElementById('modalOverlay').style.display = 'block';
-  };
+  if(action == "edit"){
+    request.onsuccess = function () {
+      document.getElementById('editModal').dataset.action = "edit"
+      let sale = request.result;
+      document.getElementById('edit-id').value = sale.id;
+      document.getElementById('edit-name').value = sale.name;
+      document.getElementById('edit-price').value = sale.price;
+      document.getElementById('edit-costPrice').value = sale.costPrice;
+      document.getElementById('edit-count').value = sale.count;
+      document.getElementById('edit-date').value = sale.date;
+  
+      document.getElementById('editModal').style.display = 'block';
+      document.getElementById('modalOverlay').style.display = 'block';
+    };
+  } 
 
   request.onerror = function () {
     console.error("Ошибка при получении записи:", request.error);
   };
 }
 
-document.getElementById('editForm').addEventListener('submit', function(e) {
-  e.preventDefault();
 
-  const id = Number(document.getElementById('edit-id').value);
-  const updatedSale = {
-    id: id,
-    name: document.getElementById('edit-name').value,
-    price: Number(document.getElementById('edit-price').value),
-    costPrice: Number(document.getElementById('edit-costPrice').value),
-    count: Number(document.getElementById('edit-count').value),
-    date: document.getElementById('edit-date').value,
-    revenue: (Number(document.getElementById('edit-price').value) - Number(document.getElementById('edit-costPrice').value)) * Number(document.getElementById('edit-count').value)
-  };
-
-  if(!/^[а-яА-Я0-9\s]+$/.test(updatedSale.name)){
-    alert("Имя должно содержать только буквы или цифры")
-    return
-  }
-  if(!/^[0-9]+$/.test(updatedSale.price)){
-    if(!updatedSale.price > 0){
-      alert("Цена должна быть числом, которое больше 0")
+function mainForm(){
+  let request;
+  if(document.getElementById('editModal').dataset.action == "edit"){
+    const id = Number(document.getElementById('edit-id').value);
+    const Sale = {
+      id: id,
+      name: document.getElementById('edit-name').value,
+      price: Number(document.getElementById('edit-price').value),
+      costPrice: Number(document.getElementById('edit-costPrice').value),
+      count: Number(document.getElementById('edit-count').value),
+      date: document.getElementById('edit-date').value,
+      revenue: (Number(document.getElementById('edit-price').value) - Number(document.getElementById('edit-costPrice').value)) * Number(document.getElementById('edit-count').value)
+    };
+    if(!/^[а-яА-Я0-9\s]+$/.test(Sale.name)){
+      alert("Имя должно содержать только буквы или цифры")
       return
     }
-  }
-  if(!/^[0-9]+$/.test(updatedSale.costPrice)){
-    if(!updatedSale.costPrice > 0){
-      alert("Себестоимость должна быть числом, которое больше 0")
+    if(!/^[0-9]+$/.test(Sale.price)){
+      if(!Sale.price > 0){
+        alert("Цена должна быть числом, которое больше 0")
+        return
+      }
+    }
+    if(!/^[0-9]+$/.test(Sale.costPrice)){
+      if(!Sale.costPrice > 0){
+        alert("Себестоимость должна быть числом, которое больше 0")
+        return
+      }
+    }
+    if(!/^[0-9]+$/.test(Sale.count)){
+      if(!Sale.count > 0){
+        alert("Количество должна быть числом, которое больше 0")
+        return
+      }
+    }
+
+    let form = document.getElementById("editForm")
+    form.reset()
+
+    let transaction = db.transaction(['Sales'], 'readwrite');
+    let sales = transaction.objectStore('Sales');
+
+    request = sales.put(Sale);
+  } else {
+    const newSale = {
+      name: document.getElementById('edit-name').value,
+      price: Number(document.getElementById('edit-price').value),
+      costPrice: Number(document.getElementById('edit-costPrice').value),
+      count: Number(document.getElementById('edit-count').value),
+      date: document.getElementById('edit-date').value,
+      revenue: (Number(document.getElementById('edit-price').value) - Number(document.getElementById('edit-costPrice').value)) * Number(document.getElementById('edit-count').value)
+    };
+
+    if(!/^[а-яА-Я0-9\s]+$/.test(newSale.name)){
+      alert("Имя должно содержать только буквы или цифры")
       return
     }
-  }
-  if(!/^[0-9]+$/.test(updatedSale.count)){
-    if(!updatedSale.count > 0){
-      alert("Количество должна быть числом, которое больше 0")
-      return
+    if(!/^[0-9]+$/.test(newSale.price)){
+      if(newSale.price < 0){
+        alert("Цена должна быть числом, которое больше 0")
+        return
+      }
     }
+    if(!/^[0-9]+$/.test(newSale.costPrice)){
+      if(newSale.costPrice < 0){
+        alert("Себестоимость должна быть числом, которое больше 0")
+        return
+      }
+    }
+    if(!/^[0-9]+$/.test(newSale.count)){
+      if(newSale.count < 0){
+        alert("Количество должна быть числом, которое больше 0")
+        return
+      }
+    }
+
+    let form = document.getElementById("editForm")
+    form.reset()
+
+    let transaction = db.transaction(['Sales'], 'readwrite');
+    let sales = transaction.objectStore('Sales');
+
+    request = sales.add(newSale);
   }
-
-  let transaction = db.transaction(['Sales'], 'readwrite');
-  let sales = transaction.objectStore('Sales');
-
-  let request = sales.put(updatedSale);
 
   request.onsuccess = function () {
     console.log("Продажа обновлена");
@@ -204,71 +250,13 @@ document.getElementById('editForm').addEventListener('submit', function(e) {
     console.error("Ошибка при обновлении:", request.error);
     alert("Не удалось сохранить изменения");
   };
-});
+}
 
-
-
-let add_btn = document.querySelector(".add_btn")
-add_btn.addEventListener("click", () => {
-  document.getElementById('addModal').style.display = 'block';
-  document.getElementById('modalOverlay').style.display = 'block';
-})
-
-
-document.getElementById('addForm').addEventListener('submit', function(e) {
-  e.preventDefault();
-  const newSale = {
-    name: document.getElementById('add-name').value,
-    price: Number(document.getElementById('add-price').value),
-    costPrice: Number(document.getElementById('add-costPrice').value),
-    count: Number(document.getElementById('add-count').value),
-    date: document.getElementById('add-date').value,
-    revenue: (Number(document.getElementById('add-price').value) - Number(document.getElementById('add-costPrice').value)) * Number(document.getElementById('add-count').value)
-  };
-
-  if(!/^[а-яА-Я0-9\s]+$/.test(newSale.name)){
-    alert("Имя должно содержать только буквы или цифры")
-    return
+document.getElementById('editForm').addEventListener('submit', function (e) {
+    e.preventDefault();
+    mainForm()
   }
-  if(!/^[0-9]+$/.test(newSale.price)){
-    if(newSale.price < 0){
-      alert("Цена должна быть числом, которое больше 0")
-      return
-    }
-  }
-  if(!/^[0-9]+$/.test(newSale.costPrice)){
-    if(newSale.costPrice < 0){
-      alert("Себестоимость должна быть числом, которое больше 0")
-      return
-    }
-  }
-  if(!/^[0-9]+$/.test(newSale.count)){
-    if(newSale.count < 0){
-      alert("Количество должна быть числом, которое больше 0")
-      return
-    }
-  }
-
-  let form = document.getElementById("addForm")
-  form.reset()
-
-  let transaction = db.transaction(['Sales'], 'readwrite');
-  let sales = transaction.objectStore('Sales');
-
-  let request = sales.add(newSale);
-
-  request.onsuccess = function () {
-    console.log("Продажа добавлена");
-    document.getElementById('addModal').style.display = 'none';
-    document.getElementById('modalOverlay').style.display = 'none';
-    displaySales();
-  };
-
-  request.onerror = function () {
-    console.error("Ошибка при обновлении:", request.error);
-    alert("Не удалось сохранить изменения");
-  };
-});
+);
 
 let more = document.querySelector(".more")
 more.addEventListener("click", () => {
@@ -296,8 +284,8 @@ more.addEventListener("click", () => {
           <td><input placeholder="Дата продажи" name="date" value="${sale.date}" readonly></input></td>
           <td><input placeholder="Количество" name="count" value="${sale.count}" readonly></input></td>
           <td><input placeholder="Выручка" name="revenue" value="${sale.revenue}" readonly></input></td>
-          <td><div class="edit_btn"><img src="./img/pen.png" alt=""></div></td>
-          <td><div class="delete_btn"><img src="./img/trash.png" alt=""></div></td>
+          <td><div class="edit_btn" data-id="${sale.id}"><img src="./img/pen.png" alt=""></div></td>
+          <td><div class="delete_btn" data-id="${sale.id}"><img src="./img/trash.png" alt=""></div></td>
         `
         item.dataset.id = sale.id;
         tbody.appendChild(item)
@@ -308,7 +296,7 @@ more.addEventListener("click", () => {
         for(let edit_btn of edit_Btns){
           if(edit_btn.dataset.id == sale.id){
             edit_btn.onclick = function() {
-              openEditModal(sale.id);
+              openModal(sale.id, "edit");
             }
           }
         }

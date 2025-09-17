@@ -28,7 +28,7 @@
                 <div class="btn_costPrice">
                     <div class="add_btn">Добавить продажу</div>
                     <div class="more" data-open="closed"><p>Показать еще</p><img src="./img/Polygon.png" alt=""></div>
-                    <div class="costPrice"><p>Прибыль: 86800р</p></div>
+                    <div class="costPrice"><p>Прибыль: 0р</p></div>
                 </div>
                 
                 <div class="allGraphics">
@@ -105,7 +105,7 @@
                 </div>
             </div>
         </div>
-        <div id="editModal" class="modal" style="display: none;">
+        <div id="editModal" class="modal" style="display: none;" data-action="add">
             <div class="modal-content">
                 <h3>Редактировать продажу</h3>
                 <form id="editForm">
@@ -129,33 +129,6 @@
                     <div style="margin-top: 10px;">
                         <button type="submit">Сохранить</button>
                         <button type="button" id="closeModal">Отмена</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-        <div id="addModal" class="modal" style="display: none;">
-            <div class="modal-content">
-                <h3>Добавить продажу</h3>
-                <form id="addForm">
-
-                    <label>Наименование:</label>
-                    <input type="text" id="add-name" required>
-
-                    <label>Цена:</label>
-                    <input type="number" id="add-price" required>
-
-                    <label>Себестоимость:</label>
-                    <input type="number" id="add-costPrice" required>
-
-                    <label>Количество:</label>
-                    <input type="number" id="add-count" required>
-
-                    <label>Дата:</label>
-                    <input type="text" id="add-date" required>
-
-                    <div style="margin-top: 10px;">
-                        <button type="submit">Сохранить</button>
-                        <button type="button" id="closeModalAdd">Отмена</button>
                     </div>
                 </form>
             </div>
