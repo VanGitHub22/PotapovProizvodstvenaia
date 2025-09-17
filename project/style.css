@@ -151,139 +151,28 @@ td input{
     display: flex;
 }
 
-.green{
-    height: 350px;
-    background: #45FF4B;
-    width: 30px;
-}
-
-.orange{
-    height: 150px;
-    background: #FFC445;
+.column {
     width: 30px;
     margin-left: 27px;
 }
 
-.red{
-    height: 230px;
-    background: #FF7745;
-    width: 30px;
-    margin-left: 27px;
-}
-
-.purple{
-    height: 170px;
-    background: #BB45FF;
-    width: 30px;
-    margin-left: 27px;
-}
-
-.yellow{
-    height: 250px;
-    background: #FFF945;
-    width: 30px;
-    margin-left: 27px;
-}
-
-.blue{
-    height: 70px;
-    background: #4579FF;
-    width: 30px;
-    margin-left: 27px;
-}
-
-.darkblue{
-    height: 140px;
-    background: #153483;
-    width: 30px;
-    margin-left: 27px;
-}
-
-
-
-
-.green2{
-    height: 350px;
-    background: #45FF4B;
-    width: 20px;
-}
-
-.orange2{
-    height: 150px;
-    background: #FFC445;
+.column_small {
     width: 20px;
     margin-left: 25px;
 }
 
-.red2{
-    height: 230px;
-    background: #FF7745;
-    width: 20px;
-    margin-left: 25px;
-}
-
-.purple2{
-    height: 170px;
-    background: #BB45FF;
-    width: 20px;
-    margin-left: 25px;
-}
-
-.yellow2{
-    height: 250px;
-    background: #FFF945;
-    width: 20px;
-    margin-left: 25px;
-}
-
-.blue2{
-    height: 70px;
-    background: #4579FF;
-    width: 20px;
-    margin-left: 25px;
-}
-
-.darkblue2{
-    height: 140px;
-    background: #153483;
-    width: 20px;
-    margin-left: 25px;
-}
-
-.lightblue{
-    height: 230px;
-    background: #45ffc1;
-    width: 20px;
-    margin-left: 25px;
-}
-
-.darkpurple{
-    height: 170px;
-    background: #451a5e;
-    width: 20px;
-    margin-left: 25px;
-}
-
-.darkdarkpurple{
-    height: 250px;
-    background: #1a0049;
-    width: 20px;
-    margin-left: 25px;
-}
-
-.darkgreen{
-    height: 70px;
-    background: #00420b;
-    width: 20px;
-    margin-left: 25px;
-}
-
-.darkpink{
-    height: 140px;
-    background: #5c0045;
-    width: 20px;
-    margin-left: 25px;
-}
+.green     { margin-left: 0; background: #45FF4B; }
+.orange    { background: #FFC445; }
+.red       { background: #FF7745; }
+.purple    { background: #BB45FF; }
+.yellow    { background: #FFF945; }
+.blue      { background: #4579FF; }
+.darkblue  { background: #153483; }
+.lightblue       { background: #45ffc1; }
+.darkpurple      { background: #451a5e; }
+.darkdarkpurple  { background: #1a0049; }
+.darkgreen       { background: #00420b; }
+.darkpink        { background: #5c0045; }
 
 
 

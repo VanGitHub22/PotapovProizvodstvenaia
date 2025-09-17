@@ -403,6 +403,7 @@ function createColumnGraph(year){
     limitResult.forEach(sale => {
       let percent = sale.revenue / (max / 100) 
       let graphBlock = document.createElement("div")
+      graphBlock.classList.add("column") 
       graphBlock.classList.add(colGraphElements[i]) 
       graphBlock.style.height = 350 * (percent / 100) + "px"
       columnarGraph.appendChild(graphBlock)
@@ -486,13 +487,14 @@ function createColumnGraph2(year){
     }))
     
 
-    let colGraphElements = ["green2", "orange2", "red2", "purple2", "yellow2", "blue2", "darkblue2", "lightblue", "darkpurple", "darkdarkpurple", "darkgreen", "darkpink"]
+    let colGraphElements = ["green", "orange", "red", "purple", "yellow", "blue", "darkblue", "lightblue", "darkpurple", "darkdarkpurple", "darkgreen", "darkpink"]
     let i = 0;
     let columnarGraph = document.querySelector(".columnarGraph2")
     columnarGraph.innerHTML = ""
     Object.values(perMonth).forEach(revenue => {
       let percent = revenue / (max / 100) 
       let graphBlock = document.createElement("div")
+      graphBlock.classList.add("column_small") 
       graphBlock.classList.add(colGraphElements[i]) 
       graphBlock.style.height = 350 * (percent / 100) + "px"
       columnarGraph.appendChild(graphBlock)
