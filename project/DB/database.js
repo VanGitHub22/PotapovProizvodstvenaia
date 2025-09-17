@@ -10,8 +10,6 @@ request.onupgradeneeded = function(event) {
   if(!db.objectStoreNames.contains('Sales')){
     db.createObjectStore('Sales', {keyPath: 'id', autoIncrement: true});
   }
-
-  
 };
 
 request.onsuccess = function(event) {
@@ -165,6 +163,29 @@ document.getElementById('editForm').addEventListener('submit', function(e) {
     revenue: (Number(document.getElementById('edit-price').value) - Number(document.getElementById('edit-costPrice').value)) * Number(document.getElementById('edit-count').value)
   };
 
+  if(!/^[а-яА-Я0-9]+$/.test(updatedSale.name)){
+    alert("Имя должно содержать только буквы или цифры")
+    return
+  }
+  if(!/^[0-9]+$/.test(updatedSale.price)){
+    if(!updatedSale.price > 0){
+      alert("Цена должна быть числом, которое больше 0")
+      return
+    }
+  }
+  if(!/^[0-9]+$/.test(updatedSale.costPrice)){
+    if(!updatedSale.costPrice > 0){
+      alert("Себестоимость должна быть числом, которое больше 0")
+      return
+    }
+  }
+  if(!/^[0-9]+$/.test(updatedSale.count)){
+    if(!updatedSale.count > 0){
+      alert("Количество должна быть числом, которое больше 0")
+      return
+    }
+  }
+
   let transaction = db.transaction(['Sales'], 'readwrite');
   let sales = transaction.objectStore('Sales');
 
@@ -202,6 +223,32 @@ document.getElementById('addForm').addEventListener('submit', function(e) {
     date: document.getElementById('add-date').value,
     revenue: (Number(document.getElementById('add-price').value) - Number(document.getElementById('add-costPrice').value)) * Number(document.getElementById('add-count').value)
   };
+
+  if(!/^[а-яА-Я0-9]+$/.test(newSale.name)){
+    alert("Имя должно содержать только буквы или цифры")
+    return
+  }
+  if(!/^[0-9]+$/.test(newSale.price)){
+    if(newSale.price < 0){
+      alert("Цена должна быть числом, которое больше 0")
+      return
+    }
+  }
+  if(!/^[0-9]+$/.test(newSale.costPrice)){
+    if(newSale.costPrice < 0){
+      alert("Себестоимость должна быть числом, которое больше 0")
+      return
+    }
+  }
+  if(!/^[0-9]+$/.test(newSale.count)){
+    if(newSale.count < 0){
+      alert("Количество должна быть числом, которое больше 0")
+      return
+    }
+  }
+
+  let form = document.getElementById("addForm")
+  form.reset()
 
   let transaction = db.transaction(['Sales'], 'readwrite');
   let sales = transaction.objectStore('Sales');

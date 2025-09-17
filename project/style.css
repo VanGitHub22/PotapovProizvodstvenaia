@@ -366,7 +366,7 @@ footer{
 }
 
 .columnarGraph2{
-    border: 1px solid #0000002c;
+    border-left: 1px solid #0000002c;
     padding-left: 10px;
     width: 550px;
     align-items: end;
