@@ -1,3 +1,14 @@
+let line = (el) => {
+  return `<td><div class="tableText">${el.name}</div></td>
+          <td><div class="tableText">${el.price}</div></td>
+          <td><div class="tableText">${el.costPrice}</div></td>
+          <td><div class="tableText">${el.date}</div></td>
+          <td><div class="tableText">${el.count}</div></td>
+          <td><div class="tableText">${el.revenue}</div></td>
+          <td><div class="edit_btn" data-id="${el.id}"><img src="./img/pen.png" alt=""></div></td>
+          <td><div class="delete_btn" data-id="${el.id}"><img src="./img/trash.png" alt=""></div></td>`
+}
+
 let db;
 let request = indexedDB.open("Sales", 4);
 
@@ -18,8 +29,23 @@ request.onsuccess = function(event) {
   displaySales()
 };
 
-function formatDate(date) {
-  return `${date.getDate()}.${date.getMonth() + 1}.${date.getFullYear()}`;
+function dateToString(dateDate) {
+  let parts = dateDate.split('-')
+  return `${parts[2]}.${parts[1]}.${parts[0]}`;
+}
+
+function stringToDate(dateString) {
+  let parts = dateString.split('.');
+  return `${parts[2]}-${parts[1]}-${parts[0]}`;
+}
+
+function stringFortDate(date){
+  let parts = date.split('.');
+  return new Date(
+    parseInt(parts[2]),
+    parseInt(parts[1]) - 1,
+    parseInt(parts[0])
+  );
 }
 
 let add_btn = document.querySelector(".add_btn")
@@ -34,8 +60,6 @@ closeModal.addEventListener('click', () => {
   document.getElementById('editModal').style.display = 'none';
   document.getElementById('modalOverlay').style.display = 'none';
 })
-
-
 
 function displaySales(){
   let transaction = db.transaction(['Sales'], 'readonly')
@@ -59,21 +83,12 @@ function displaySales(){
     let profit = 0;
     result.sort((a, b) => b.revenue - a.revenue)
     let limitResult = result.slice(0, 7)
+    result.forEach(sale => profit += sale.revenue )
     limitResult.forEach(sale => {
       let item = document.createElement("tr")
-      item.innerHTML = `
-        <td><input placeholder="Наименование товара" name="name" value="${sale.name}" readonly></input></td>
-        <td><input placeholder="Цена" name="price" value="${sale.price}" readonly></input></td>
-        <td><input placeholder="Себестоимость" name="costPrice" value="${sale.costPrice}" readonly></input></td>
-        <td><input placeholder="Дата продажи" name="date" value="${sale.date}" readonly></input></td>
-        <td><input placeholder="Количество" name="count" value="${sale.count}" readonly></input></td>
-        <td><input placeholder="Выручка" name="revenue" value="${sale.revenue}" readonly></input></td>
-        <td><div class="edit_btn" data-id="${sale.id}"><img src="./img/pen.png" alt=""></div></td>
-        <td><div class="delete_btn" data-id="${sale.id}"><img src="./img/trash.png" alt=""></div></td>
-      `
+      item.innerHTML = line(sale)
       item.dataset.id = sale.id;
       tbody.appendChild(item)
-      profit += sale.revenue
       let edit_Btns = document.querySelectorAll(".edit_btn")
       for(let edit_btn of edit_Btns){
         if(edit_btn.dataset.id == sale.id){
@@ -105,6 +120,70 @@ function displaySales(){
     console.error("Ошибка при загрузке продаж:", request.error);
   };
 }
+
+let more = document.querySelector(".more")
+more.addEventListener("click", () => {
+  if(more.dataset.open == "closed"){
+    let transaction = db.transaction(['Sales'], 'readonly')
+    let sales = transaction.objectStore('Sales')
+    let request = sales.getAll()
+    request.onsuccess = function () {
+      let result = request.result
+      let tbody = document.querySelector('tbody')
+      tbody.innerHTML = '';
+  
+      if(result.length === 0){
+        tbody.innerHTML = "<tr><td>Продаж нет</td></tr>"
+        return
+      }
+      let profit = 0;
+      result.sort((a, b) => b.revenue - a.revenue)
+      result.forEach(sale => {
+        let item = document.createElement("tr")
+        item.innerHTML = line(sale)
+        item.dataset.id = sale.id;
+        tbody.appendChild(item)
+        profit += sale.revenue
+
+        let edit_Btns = document.querySelectorAll(".edit_btn")
+        for(let edit_btn of edit_Btns){
+          if(edit_btn.dataset.id == sale.id){
+            edit_btn.onclick = function() {
+              openModal(sale.id, "edit");
+            }
+          }
+        }
+        let delete_Btns = document.querySelectorAll(".delete_btn")
+        for(let delete_Btn of delete_Btns){
+          if(delete_Btn.dataset.id == sale.id){
+            delete_Btn.onclick = function() {
+              deleteSale(sale.id, () => {
+                if (document.querySelectorAll('tbody tr').length === 0) {
+                  document.querySelector('tbody').innerHTML = "<tr><td colspan='8'>Продаж нет</td></tr>";
+                }
+              });
+            }
+          }
+        }
+
+      })
+      
+      document.querySelector(".costPrice").innerHTML = `<p>Прибыль: ${profit}р</p>`
+      more.dataset.open = "opened";
+      let img = more.querySelector("img")
+      img.style.rotate = "180deg"
+    }
+  
+    request.onerror = function () {
+      console.error("Ошибка при загрузке продаж:", request.error);
+    }
+  } else {
+    displaySales()
+    more.dataset.open = "closed";
+    let img = more.querySelector("img")
+    img.style.rotate = "0deg"
+  }
+})
 
 
 function deleteSale(id, callback) {
@@ -141,7 +220,7 @@ function openModal(id, action) {
       document.getElementById('edit-price').value = sale.price;
       document.getElementById('edit-costPrice').value = sale.costPrice;
       document.getElementById('edit-count').value = sale.count;
-      document.getElementById('edit-date').value = sale.date;
+      document.getElementById('edit-date').value = stringToDate(sale.date);
   
       document.getElementById('editModal').style.display = 'block';
       document.getElementById('modalOverlay').style.display = 'block';
@@ -164,9 +243,10 @@ function mainForm(){
       price: Number(document.getElementById('edit-price').value),
       costPrice: Number(document.getElementById('edit-costPrice').value),
       count: Number(document.getElementById('edit-count').value),
-      date: document.getElementById('edit-date').value,
+      date: dateToString(document.getElementById('edit-date').value),
       revenue: (Number(document.getElementById('edit-price').value) - Number(document.getElementById('edit-costPrice').value)) * Number(document.getElementById('edit-count').value)
     };
+
     if(!/^[а-яА-Я0-9\s]+$/.test(Sale.name)){
       alert("Имя должно содержать только буквы или цифры")
       return
@@ -203,7 +283,7 @@ function mainForm(){
       price: Number(document.getElementById('edit-price').value),
       costPrice: Number(document.getElementById('edit-costPrice').value),
       count: Number(document.getElementById('edit-count').value),
-      date: document.getElementById('edit-date').value,
+      date: dateToString(document.getElementById('edit-date').value),
       revenue: (Number(document.getElementById('edit-price').value) - Number(document.getElementById('edit-costPrice').value)) * Number(document.getElementById('edit-count').value)
     };
 
@@ -258,81 +338,6 @@ document.getElementById('editForm').addEventListener('submit', function (e) {
   }
 );
 
-let more = document.querySelector(".more")
-more.addEventListener("click", () => {
-  if(more.dataset.open == "closed"){
-    let transaction = db.transaction(['Sales'], 'readonly')
-    let sales = transaction.objectStore('Sales')
-    let request = sales.getAll()
-    request.onsuccess = function () {
-      let result = request.result
-      let tbody = document.querySelector('tbody')
-      tbody.innerHTML = '';
-  
-      if(result.length === 0){
-        tbody.innerHTML = "<tr><td>Продаж нет</td></tr>"
-        return
-      }
-      let profit = 0;
-      result.sort((a, b) => b.revenue - a.revenue)
-      result.forEach(sale => {
-        let item = document.createElement("tr")
-        item.innerHTML = `
-          <td><input placeholder="Наименование товара" name="name" value="${sale.name}" readonly></input></td>
-          <td><input placeholder="Цена" name="price" value="${sale.price}" readonly></input></td>
-          <td><input placeholder="Себестоимость" name="costPrice" value="${sale.costPrice}" readonly></input></td>
-          <td><input placeholder="Дата продажи" name="date" value="${sale.date}" readonly></input></td>
-          <td><input placeholder="Количество" name="count" value="${sale.count}" readonly></input></td>
-          <td><input placeholder="Выручка" name="revenue" value="${sale.revenue}" readonly></input></td>
-          <td><div class="edit_btn" data-id="${sale.id}"><img src="./img/pen.png" alt=""></div></td>
-          <td><div class="delete_btn" data-id="${sale.id}"><img src="./img/trash.png" alt=""></div></td>
-        `
-        item.dataset.id = sale.id;
-        tbody.appendChild(item)
-        profit += sale.revenue
-        let date = sale.date
-
-        let edit_Btns = document.querySelectorAll(".edit_btn")
-        for(let edit_btn of edit_Btns){
-          if(edit_btn.dataset.id == sale.id){
-            edit_btn.onclick = function() {
-              openModal(sale.id, "edit");
-            }
-          }
-        }
-        let delete_Btns = document.querySelectorAll(".delete_btn")
-        for(let delete_Btn of delete_Btns){
-          if(delete_Btn.dataset.id == sale.id){
-            delete_Btn.onclick = function() {
-              deleteSale(sale.id, () => {
-                if (document.querySelectorAll('tbody tr').length === 0) {
-                  document.querySelector('tbody').innerHTML = "<tr><td colspan='8'>Продаж нет</td></tr>";
-                }
-              });
-            }
-          }
-        }
-
-      })
-      
-      document.querySelector(".costPrice").innerHTML = `<p>Прибыль: ${profit}р</p>`
-      more.dataset.open = "opened";
-      let img = more.querySelector("img")
-      img.style.rotate = "180deg"
-    }
-  
-    request.onerror = function () {
-      console.error("Ошибка при загрузке продаж:", request.error);
-    }
-  } else {
-    displaySales()
-    more.dataset.open = "closed";
-    let img = more.querySelector("img")
-    img.style.rotate = "0deg"
-  }
-})
-
-
 function createColumnGraph(year){
   let transaction = db.transaction(['Sales'], 'readonly')
   let sales = transaction.objectStore('Sales')
@@ -341,7 +346,7 @@ function createColumnGraph(year){
   request.onsuccess = function () {
     let result = request.result
     let salesInChoosedYear = result.filter(sale => {
-      let date = stringToDate(sale.date);
+      let date = stringFortDate(sale.date);
       return date.getFullYear() === year;
     });
     salesInChoosedYear.sort((a, b) => {
@@ -404,17 +409,6 @@ function createColumnGraph(year){
   };
 }
 
-
-function stringToDate(dateString) {
-  let parts = dateString.split('.');
-  return new Date(
-    parseInt(parts[2]),
-    parseInt(parts[1]) - 1,
-    parseInt(parts[0])
-  );
-}
-
-
 let colGraphSelect = document.querySelector("#colGraphSelect")
 colGraphSelect.addEventListener('change', () => {
   let value = colGraphSelect.value
@@ -437,7 +431,7 @@ function createColumnGraph2(year){
   request.onsuccess = function () {
     let result = request.result
     let salesInChoosedYear = result.filter(sale => {
-      let date = stringToDate(sale.date);
+      let date = stringFortDate(sale.date);
       return date.getFullYear() === year;
     });
     let perMonth = {jan: 0, feb: 0, mar: 0, apr: 0, may: 0, jun: 0, jul: 0, aug: 0, sep: 0, okt: 0, nov: 0, dec: 0}

@@ -81,10 +81,9 @@ table tr td:nth-child(8) img{
     display: block;
 }
 
-td input{
+.tableText{
     width: 100%;
-    outline: none;
-    border: none;
+    background: #fff;
     padding: 9px 7px;
     border-radius: 3px;
 }
