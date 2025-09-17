@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
     <link rel="stylesheet" href="style.css">
     <title>Document</title>
 </head>
@@ -32,8 +33,10 @@
                 </div>
                 
                 <div class="allGraphics">
-
-                    <div class="graphic1">
+                    <div id="chart"></div>
+                    <div id="chart2"></div>
+                    <select id="colGraphSelect"></select>
+                    <!--<div class="graphic1">
                         <div class="graphics">
                             <div class="graph1">
                                 <div class="points">
@@ -102,7 +105,7 @@
                             <option value="2024">2024</option>
                         </select>
                     </div>
-                </div>
+                </div>-->
             </div>
         </div>
         <div id="editModal" class="modal" style="display: none;" data-action="add">

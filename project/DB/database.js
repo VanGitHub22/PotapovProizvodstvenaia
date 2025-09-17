@@ -12,6 +12,11 @@ let line = (el) => {
 let db;
 let request = indexedDB.open("Sales", 4);
 
+document.querySelector("#colGraphSelect").addEventListener('change', () => {
+    createColumnGraph(Number(colGraphSelect.value))
+    createPieGraph(Number(colGraphSelect.value))
+})
+
 request.onerror = function(event) {
   console.error("Ошибка базы:", event.target.error);
 };
@@ -108,12 +113,31 @@ function displaySales(){
         }
       }
     })
+    let years = result.reduce((acc, item) => {
+      let fulldate = item.date
+      let year = fulldate.split('.')
+      if(!acc.includes(year[2])){
+        acc.push(year[2])
+      }
+      return acc;
+    }, [])
+    if (years.length > 0) {
+      const defaultYear = Number(years[0]);
+      createColumnGraph(defaultYear);
+      createPieGraph(defaultYear);
+    }
+    let colGraphSelect = document.querySelector("#colGraphSelect")
+    colGraphSelect.innerHTML = ""
+    years.forEach(year => {
+      let option = document.createElement('option')
+      option.value = year
+      option.text = year
+      colGraphSelect.append(option)
+    })
+
     
     document.querySelector(".costPrice").innerHTML = `<p>Прибыль: ${profit}р</p>`
-    let columnarGraph = document.querySelector(".columnarGraph")
-    columnarGraph.innerHTML = ""
-    createColumnGraph(2025)
-    createColumnGraph2(2025)
+
   }
 
   request.onerror = function () {
@@ -338,13 +362,20 @@ document.getElementById('editForm').addEventListener('submit', function (e) {
   }
 );
 
-function createColumnGraph(year){
-  let transaction = db.transaction(['Sales'], 'readonly')
-  let sales = transaction.objectStore('Sales')
-  let request = sales.getAll()
+
+/*Графики через библиотеку ApexCharts*/
+
+
+let columnChart = null;
+let pieChart = null;
+
+function createColumnGraph(year) {
+  let transaction = db.transaction(['Sales'], 'readonly');
+  let sales = transaction.objectStore('Sales');
+  let request = sales.getAll();
 
   request.onsuccess = function () {
-    let result = request.result
+    let result = request.result;
     let salesInChoosedYear = result.filter(sale => {
       let date = stringFortDate(sale.date);
       return date.getFullYear() === year;
@@ -352,139 +383,79 @@ function createColumnGraph(year){
     salesInChoosedYear.sort((a, b) => {
       let [dayA, monthA, yearA] = a.date.split('.').map(Number);
       let [dayB, monthB, yearB] = b.date.split('.').map(Number);
-
-      let dateA = new Date(yearA, monthA - 1, dayA);
-      let dateB = new Date(yearB, monthB - 1, dayB);
-
-      return dateA - dateB;
+      return new Date(yearA, monthA - 1, dayA) - new Date(yearB, monthB - 1, dayB);
     });
-    let limitResult = salesInChoosedYear.slice(0, 7)
 
-    let max = 0
-    let dates = []
+    let limitResult = salesInChoosedYear.slice(0, 7);
+    let items = limitResult.map(sale => sale.name);
+    let itemsPrices = limitResult.map(sale => sale.revenue);
 
-    limitResult.forEach(sale => {
-      if(sale.revenue > max){
-        max = sale.revenue
-      }
-      dates.push(sale.name)
-    })
-
-    let AllPoints = document.querySelectorAll(".points .point")
-    let g = 1
-    AllPoints.forEach((point => {
-      point.innerHTML = `${Math.round(max * g)} -`
-      g -= 0.14
-    }))
-
-    let AllDate = document.querySelectorAll(".dates .date")
-    let j = 0
-    AllDate.forEach((date => {
-      if(dates[j] !== undefined){
-        date.innerHTML = dates[j]
-      } else {
-        date.innerHTML = ""
-      }
-      j++
-    }))
-    
-
-    let colGraphElements = ["green", "orange", "red", "purple", "yellow", "blue", "darkblue"]
-    let i = 0;
-    let columnarGraph = document.querySelector(".columnarGraph")
-    columnarGraph.innerHTML = ""
-    limitResult.forEach(sale => {
-      let percent = sale.revenue / (max / 100) 
-      let graphBlock = document.createElement("div")
-      graphBlock.classList.add("column") 
-      graphBlock.classList.add(colGraphElements[i]) 
-      graphBlock.style.height = 350 * (percent / 100) + "px"
-      columnarGraph.appendChild(graphBlock)
-      i++
-    })
-  }
-
-  request.onerror = function () {
-    console.error("Ошибка при загрузке продаж:", request.error);
-  };
-}
-
-let colGraphSelect = document.querySelector("#colGraphSelect")
-colGraphSelect.addEventListener('change', () => {
-  let value = colGraphSelect.value
-  createColumnGraph(Number(value))
-})
-
-let colGraphSelect2 = document.querySelector("#colGraphSelect2")
-colGraphSelect2.addEventListener('change', () => {
-  let value = colGraphSelect2.value
-  createColumnGraph2(Number(value))
-})
-
-
-
-function createColumnGraph2(year){
-  let transaction = db.transaction(['Sales'], 'readonly')
-  let sales = transaction.objectStore('Sales')
-  let request = sales.getAll()
-
-  request.onsuccess = function () {
-    let result = request.result
-    let salesInChoosedYear = result.filter(sale => {
-      let date = stringFortDate(sale.date);
-      return date.getFullYear() === year;
-    });
-    let perMonth = {jan: 0, feb: 0, mar: 0, apr: 0, may: 0, jun: 0, jul: 0, aug: 0, sep: 0, okt: 0, nov: 0, dec: 0}
-    const monthKeys = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'okt', 'nov', 'dec'];
-    salesInChoosedYear.sort((a, b) => {
-      let [dayA, monthA, yearA] = a.date.split('.').map(Number);
-      let [dayB, monthB, yearB] = b.date.split('.').map(Number);
-
-      let dateA = new Date(yearA, monthA - 1, dayA);
-      let dateB = new Date(yearB, monthB - 1, dayB);
-
-      return dateA - dateB;
-    });
-    for (let el of salesInChoosedYear) {
-      let [day, month, year] = el.date.split('.').map(Number);
-      let monthIndex = month - 1;
-      let monthName = monthKeys[monthIndex];
-      perMonth[monthName] += el.revenue;
+    const options = {
+      chart: { type: 'bar', height: 450 },
+      series: [{ name: 'Выручка', data: itemsPrices }],
+      xaxis: { categories: items },
+      title: { text: `Топ-7 товаров ${year} года`, align: 'center' }
+    };
+    if (columnChart) {
+      columnChart.updateOptions(options, true);
+    } else {
+      columnChart = new ApexCharts(document.querySelector("#chart"), options);
+      columnChart.render();
     }
-    console.log(perMonth)
-    let max = 0
-    let dates = []
-
-    Object.values(perMonth).forEach(revenue => {
-      if(revenue > max){
-        max = revenue
-      }
-    })
-
-    let AllPoints = document.querySelectorAll(".points2 .point2")
-    let g = 1
-    AllPoints.forEach((point => {
-      point.innerHTML = `${Math.round(max * g)} -`
-      g -= 0.14
-    }))
-    
-
-    let colGraphElements = ["green", "orange", "red", "purple", "yellow", "blue", "darkblue", "lightblue", "darkpurple", "darkdarkpurple", "darkgreen", "darkpink"]
-    let i = 0;
-    let columnarGraph = document.querySelector(".columnarGraph2")
-    columnarGraph.innerHTML = ""
-    Object.values(perMonth).forEach(revenue => {
-      let percent = revenue / (max / 100) 
-      let graphBlock = document.createElement("div")
-      graphBlock.classList.add("column_small") 
-      graphBlock.classList.add(colGraphElements[i]) 
-      graphBlock.style.height = 350 * (percent / 100) + "px"
-      columnarGraph.appendChild(graphBlock)
-      i++
-    })
-  }
+  };
 
   request.onerror = function () {
     console.error("Ошибка при загрузке продаж:", request.error);
   };
 }
+
+function createPieGraph(year) {
+  let transaction = db.transaction(['Sales'], 'readonly');
+  let sales = transaction.objectStore('Sales');
+  let request = sales.getAll();
+
+  request.onsuccess = function () {
+    let result = request.result;
+    let salesInChoosedYear = result.filter(sale => {
+      let date = stringFortDate(sale.date);
+      return date.getFullYear() === year;
+    });
+    const perMonth = Array(12).fill(0);
+    salesInChoosedYear.forEach(sale => {
+      let [day, month, year] = sale.date.split('.').map(Number);
+      perMonth[month - 1] += sale.revenue;
+    });
+
+    const labels = ['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь',
+                    'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'];
+    const colors = ['#45FF4B', '#FFC445', '#FF7745', '#BB45FF', '#FFF945', '#4579FF',
+                    '#153483', '#45ffc1', '#451a5e', '#1a0049', '#00420b', '#5c0045'];
+
+    const options2 = {
+      chart: { type: 'pie', height: 400 },
+      series: perMonth,
+      labels: labels,
+      colors: colors,
+      title: { text: `Доход по месяцам (${year})`, align: 'center' },
+      legend: { position: 'bottom' },
+      responsive: [{
+        breakpoint: 480,
+        options: { legend: { position: 'bottom' } }
+      }]
+    };
+    if (pieChart) {
+      pieChart.updateOptions(options2, true);
+    } else {
+      pieChart = new ApexCharts(document.querySelector("#chart2"), options2);
+      pieChart.render();
+    }
+  };
+
+  request.onerror = function () {
+    console.error("Ошибка при загрузке продаж:", request.error);
+  };
+}
+
+
+
+
