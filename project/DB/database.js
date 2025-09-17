@@ -50,6 +50,12 @@ function displaySales(){
       tbody.innerHTML = "<tr><td>Продаж нет</td></tr>"
       return
     }
+    if(result.length > 7){
+      document.querySelector(".more").style.display = "flex";
+    } else {
+      document.querySelector(".more").style.display = "none";
+    }
+
     let profit = 0;
     result.sort((a, b) => b.revenue - a.revenue)
     let limitResult = result.slice(0, 7)
@@ -62,14 +68,32 @@ function displaySales(){
         <td><input placeholder="Дата продажи" name="date" value="${sale.date}" readonly></input></td>
         <td><input placeholder="Количество" name="count" value="${sale.count}" readonly></input></td>
         <td><input placeholder="Выручка" name="revenue" value="${sale.revenue}" readonly></input></td>
-        <td><div class="edit_btn"><img src="./img/pen.png" alt=""></div></td>
-        <td><div class="delete_btn"><img src="./img/trash.png" alt=""></div></td>
+        <td><div class="edit_btn" data-id="${sale.id}"><img src="./img/pen.png" alt=""></div></td>
+        <td><div class="delete_btn" data-id="${sale.id}"><img src="./img/trash.png" alt=""></div></td>
       `
       item.dataset.id = sale.id;
       tbody.appendChild(item)
       profit += sale.revenue
+      let edit_Btns = document.querySelectorAll(".edit_btn")
+      for(let edit_btn of edit_Btns){
+        if(edit_btn.dataset.id == sale.id){
+          edit_btn.onclick = function() {
+            openEditModal(sale.id);
+          }
+        }
+      }
+      let delete_Btns = document.querySelectorAll(".delete_btn")
+      for(let delete_Btn of delete_Btns){
+        if(delete_Btn.dataset.id == sale.id){
+          delete_Btn.onclick = function() {
+            deleteSale(sale.id, () => {
+              displaySales()
+            });
+          }
+        }
+      }
     })
-    setupEventListeners();
+    
     document.querySelector(".costPrice").innerHTML = `<p>Прибыль: ${profit}р</p>`
     let columnarGraph = document.querySelector(".columnarGraph")
     columnarGraph.innerHTML = ""
@@ -83,45 +107,23 @@ function displaySales(){
 }
 
 
-function setupEventListeners(){
-  let tbody = document.querySelector('tbody')
-
-   tbody.addEventListener('click', function(e) {
-    const row = e.target.closest('tr');
-    if (!row) return;
-
-    const id = Number(row.dataset.id);
-
-    if (e.target.closest('.delete_btn')) {
-      if (confirm(`Удалить продажу №${id}?`)) {
-        deleteSale(id, () => {
-          if (document.querySelectorAll('tbody tr').length === 0) {
-            document.querySelector('tbody').innerHTML = "<tr><td colspan='8'>Продаж нет</td></tr>";
-          }
-        });
-      }
-    }
-    if (e.target.closest('.edit_btn')) {
-      openEditModal(id);
-    }
-  });
-}
-
 function deleteSale(id, callback) {
-  let transaction = db.transaction(['Sales'], 'readwrite');
-  let sales = transaction.objectStore('Sales');
+  if(confirm(`Удалить продажу №${id}`)){
+    let transaction = db.transaction(['Sales'], 'readwrite');
+    let sales = transaction.objectStore('Sales');
 
-  let request = sales.delete(id);
+    let request = sales.delete(id);
 
-  request.onsuccess = function () {
-    console.log(`Продажа ${id} удалена`);
-    callback();
-  };
-
-  request.onerror = function () {
-    console.error("Ошибка при удалении:", request.error);
-    alert("Не удалось удалить запись");
-  };
+    request.onsuccess = function () {
+      console.log(`Продажа ${id} удалена`);
+      callback();
+    };
+    
+    request.onerror = function () {
+      console.error("Ошибка при удалении:", request.error);
+      alert("Не удалось удалить запись");
+    };
+  }
 }
 
 
@@ -163,7 +165,7 @@ document.getElementById('editForm').addEventListener('submit', function(e) {
     revenue: (Number(document.getElementById('edit-price').value) - Number(document.getElementById('edit-costPrice').value)) * Number(document.getElementById('edit-count').value)
   };
 
-  if(!/^[а-яА-Я0-9]+$/.test(updatedSale.name)){
+  if(!/^[а-яА-Я0-9\s]+$/.test(updatedSale.name)){
     alert("Имя должно содержать только буквы или цифры")
     return
   }
@@ -224,7 +226,7 @@ document.getElementById('addForm').addEventListener('submit', function(e) {
     revenue: (Number(document.getElementById('add-price').value) - Number(document.getElementById('add-costPrice').value)) * Number(document.getElementById('add-count').value)
   };
 
-  if(!/^[а-яА-Я0-9]+$/.test(newSale.name)){
+  if(!/^[а-яА-Я0-9\s]+$/.test(newSale.name)){
     alert("Имя должно содержать только буквы или цифры")
     return
   }
@@ -301,8 +303,30 @@ more.addEventListener("click", () => {
         tbody.appendChild(item)
         profit += sale.revenue
         let date = sale.date
+
+        let edit_Btns = document.querySelectorAll(".edit_btn")
+        for(let edit_btn of edit_Btns){
+          if(edit_btn.dataset.id == sale.id){
+            edit_btn.onclick = function() {
+              openEditModal(sale.id);
+            }
+          }
+        }
+        let delete_Btns = document.querySelectorAll(".delete_btn")
+        for(let delete_Btn of delete_Btns){
+          if(delete_Btn.dataset.id == sale.id){
+            delete_Btn.onclick = function() {
+              deleteSale(sale.id, () => {
+                if (document.querySelectorAll('tbody tr').length === 0) {
+                  document.querySelector('tbody').innerHTML = "<tr><td colspan='8'>Продаж нет</td></tr>";
+                }
+              });
+            }
+          }
+        }
+
       })
-      setupEventListeners();
+      
       document.querySelector(".costPrice").innerHTML = `<p>Прибыль: ${profit}р</p>`
       more.dataset.open = "opened";
       let img = more.querySelector("img")
