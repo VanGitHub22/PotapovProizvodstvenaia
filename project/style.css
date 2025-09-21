@@ -10,14 +10,25 @@
 
 body{
     background: #F1F2F2;
+    min-height: 100vh;
 }
 
 header{
-    display: flex;
-    align-items: center;
-    justify-content: center;
     height: 50px;
     background: #E8E8E8;
+}
+
+.header_inner{
+    display: flex;
+    align-items: center;
+    height: 50px;
+    justify-content: space-between;
+}
+
+.exit{
+    border: 1px solid #cacaca;
+    border-radius: 5px;
+    padding: 5px;
 }
 
 .container{
@@ -26,7 +37,7 @@ header{
 }
 
 main{
-    margin-top: 100px;
+    margin-top: 50px;
 }
 
 table{
@@ -215,6 +226,7 @@ table tr td:nth-child(8) img{
 
 
 footer{
+    position: fixed;
     width: 100%;
     bottom: 0;
     display: flex;
@@ -246,4 +258,61 @@ select{
 #chart2{
     width: 50%;
     padding-bottom: 70px;
+}
+
+
+.login{
+    z-index: 12;
+    position: fixed;
+    background: #fff;
+    height: 100vh;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.login form{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    box-shadow: 0px 0px 8px 0px rgba(34, 60, 80, 0.2);
+    padding: 50px 20px;
+    border-radius: 5px;
+}
+
+.login form input{
+    font-size: 16px;
+    outline: none;
+    border-radius: 5px;
+    padding: 5px;
+    border: 1px solid #cacaca;
+}
+
+.login form input[type="submit"]{
+    margin-top: 20px;
+    width: 100%;
+}
+
+
+
+@keyframes block {
+    0%{
+        transform: translateX(0);
+    } 
+    25%{
+        transform: translateX(10px);
+    }
+    50%{
+        transform: translateX(-10px);
+    }
+    75%{
+        transform: translateX(10px);
+    }
+    100%{
+        transform: translateX(0);
+    }
 }

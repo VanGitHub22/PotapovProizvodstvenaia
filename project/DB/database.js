@@ -31,7 +31,7 @@ request.onupgradeneeded = function(event) {
 request.onsuccess = function(event) {
   db = event.target.result;
   console.log("База открыта");
-  displaySales()
+  displaySales("closed")
 };
 
 function dateToString(dateDate) {
@@ -66,7 +66,7 @@ closeModal.addEventListener('click', () => {
   document.getElementById('modalOverlay').style.display = 'none';
 })
 
-function displaySales(){
+function displaySales(pattern){
   let transaction = db.transaction(['Sales'], 'readonly')
   let sales = transaction.objectStore('Sales')
   let request = sales.getAll()
@@ -74,6 +74,7 @@ function displaySales(){
     let result = request.result
     let tbody = document.querySelector('tbody')
     tbody.innerHTML = '';
+    console.log("Обновлено")
 
     if(result.length === 0){
       tbody.innerHTML = "<tr><td>Продаж нет</td></tr>"
@@ -89,7 +90,9 @@ function displaySales(){
     result.sort((a, b) => b.revenue - a.revenue)
     let limitResult = result.slice(0, 7)
     result.forEach(sale => profit += sale.revenue )
-    limitResult.forEach(sale => {
+    let usingResult;
+    pattern == "closed" ? usingResult = limitResult : usingResult = result
+    usingResult.forEach(sale => {
       let item = document.createElement("tr")
       item.innerHTML = line(sale)
       item.dataset.id = sale.id;
@@ -146,63 +149,14 @@ function displaySales(){
 }
 
 let more = document.querySelector(".more")
+let img = document.querySelector(".more img")
 more.addEventListener("click", () => {
-  if(more.dataset.open == "closed"){
-    let transaction = db.transaction(['Sales'], 'readonly')
-    let sales = transaction.objectStore('Sales')
-    let request = sales.getAll()
-    request.onsuccess = function () {
-      let result = request.result
-      let tbody = document.querySelector('tbody')
-      tbody.innerHTML = '';
-  
-      if(result.length === 0){
-        tbody.innerHTML = "<tr><td>Продаж нет</td></tr>"
-        return
-      }
-      let profit = 0;
-      result.sort((a, b) => b.revenue - a.revenue)
-      result.forEach(sale => {
-        let item = document.createElement("tr")
-        item.innerHTML = line(sale)
-        item.dataset.id = sale.id;
-        tbody.appendChild(item)
-        profit += sale.revenue
-
-        let edit_Btns = document.querySelectorAll(".edit_btn")
-        for(let edit_btn of edit_Btns){
-          if(edit_btn.dataset.id == sale.id){
-            edit_btn.onclick = function() {
-              openModal(sale.id, "edit");
-            }
-          }
-        }
-        let delete_Btns = document.querySelectorAll(".delete_btn")
-        for(let delete_Btn of delete_Btns){
-          if(delete_Btn.dataset.id == sale.id){
-            delete_Btn.onclick = function() {
-              deleteSale(sale.id, () => {
-                if (document.querySelectorAll('tbody tr').length === 0) {
-                  document.querySelector('tbody').innerHTML = "<tr><td colspan='8'>Продаж нет</td></tr>";
-                }
-              });
-            }
-          }
-        }
-
-      })
-      
-      document.querySelector(".costPrice").innerHTML = `<p>Прибыль: ${profit}р</p>`
-      more.dataset.open = "opened";
-      let img = more.querySelector("img")
-      img.style.rotate = "180deg"
-    }
-  
-    request.onerror = function () {
-      console.error("Ошибка при загрузке продаж:", request.error);
-    }
+  if(more.dataset.open == "closed"){  
+    more.dataset.open = "open";
+    displaySales("open")
+    img.style.rotate = "180deg"
   } else {
-    displaySales()
+    displaySales("closed")
     more.dataset.open = "closed";
     let img = more.querySelector("img")
     img.style.rotate = "0deg"
@@ -357,10 +311,56 @@ function mainForm(){
 }
 
 document.getElementById('editForm').addEventListener('submit', function (e) {
-    e.preventDefault();
-    mainForm()
+  e.preventDefault();
+  mainForm()
+});
+
+
+
+let loginForm = document.getElementById("loginForm")
+let login = document.getElementById("login");
+let password = document.getElementById("password");
+
+loginForm.addEventListener("submit", (e) => {
+  e.preventDefault();
+  let loginValue = document.getElementById("login").value;
+  let passwordValue = document.getElementById("password").value;
+
+  if(loginValue == "admin" && passwordValue == "admin"){
+    let hieght = window.innerHeight;
+    let fullLoginForm = document.querySelector(".login")
+    fullLoginForm.style.transform = `translateY(${-hieght}px)`
+  } else {
+    login.style.borderColor = "#ff0000"
+    login.style.animation = "block .3s ease-in"
+    password.style.borderColor = "#ff0000"
+    password.style.animation = "block .3s ease-in"
+    setTimeout(() => {
+      login.style.animation = ""
+      password.style.animation = ""
+    }, 300)
   }
-);
+})
+
+login.addEventListener("input", () => {
+  login.style.borderColor = "#cacaca"
+  password.style.borderColor = "#cacaca"
+})
+
+password.addEventListener("input", () => {
+  login.style.borderColor = "#cacaca"
+  password.style.borderColor = "#cacaca"
+})
+
+
+let exit = document.querySelector(".exit")
+
+exit.addEventListener("click", () => {
+  loginForm.reset()
+  let fullLoginForm = document.querySelector(".login")
+  fullLoginForm.style.transform = `translateY(${0}px)`
+})
+
 
 
 /*Графики через библиотеку ApexCharts*/
