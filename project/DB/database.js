@@ -10,7 +10,7 @@ let line = (el) => {
 }
 
 let db;
-let request = indexedDB.open("Sales", 4);
+let request = indexedDB.open("Sales", 7);
 
 document.querySelector("#colGraphSelect").addEventListener('change', () => {
     createColumnGraph(Number(colGraphSelect.value))
@@ -90,6 +90,7 @@ function displaySales(pattern){
     result.sort((a, b) => b.revenue - a.revenue)
     let limitResult = result.slice(0, 7)
     result.forEach(sale => profit += sale.revenue )
+    
     let usingResult;
     pattern == "closed" ? usingResult = limitResult : usingResult = result
     usingResult.forEach(sale => {
@@ -213,88 +214,50 @@ function openModal(id, action) {
 
 function mainForm(){
   let request;
-  if(document.getElementById('editModal').dataset.action == "edit"){
-    const id = Number(document.getElementById('edit-id').value);
-    const Sale = {
-      id: id,
-      name: document.getElementById('edit-name').value,
-      price: Number(document.getElementById('edit-price').value),
-      costPrice: Number(document.getElementById('edit-costPrice').value),
-      count: Number(document.getElementById('edit-count').value),
-      date: dateToString(document.getElementById('edit-date').value),
-      revenue: (Number(document.getElementById('edit-price').value) - Number(document.getElementById('edit-costPrice').value)) * Number(document.getElementById('edit-count').value)
-    };
+  const id = Number(document.getElementById('edit-id').value);
+  const Sale = {
+    id: id,
+    name: document.getElementById('edit-name').value,
+    price: Number(document.getElementById('edit-price').value),
+    costPrice: Number(document.getElementById('edit-costPrice').value),
+    count: Number(document.getElementById('edit-count').value),
+    date: dateToString(document.getElementById('edit-date').value),
+    revenue: (Number(document.getElementById('edit-price').value) - Number(document.getElementById('edit-costPrice').value)) * Number(document.getElementById('edit-count').value)
+  };
 
-    if(!/^[а-яА-Я0-9\s]+$/.test(Sale.name)){
-      alert("Имя должно содержать только буквы или цифры")
+  if(!/^[а-яА-Я0-9\s]+$/.test(Sale.name)){
+    alert("Имя должно содержать только буквы или цифры")
+    return
+  }
+  if(!/^[0-9]+$/.test(Sale.price)){
+    if(!Sale.price > 0){
+      alert("Цена должна быть числом, которое больше 0")
       return
     }
-    if(!/^[0-9]+$/.test(Sale.price)){
-      if(!Sale.price > 0){
-        alert("Цена должна быть числом, которое больше 0")
-        return
-      }
+  }
+  if(!/^[0-9]+$/.test(Sale.costPrice)){
+    if(!Sale.costPrice > 0){
+      alert("Себестоимость должна быть числом, которое больше 0")
+      return
     }
-    if(!/^[0-9]+$/.test(Sale.costPrice)){
-      if(!Sale.costPrice > 0){
-        alert("Себестоимость должна быть числом, которое больше 0")
-        return
-      }
+  }
+  if(!/^[0-9]+$/.test(Sale.count)){
+    if(!Sale.count > 0){
+      alert("Количество должна быть числом, которое больше 0")
+      return
     }
-    if(!/^[0-9]+$/.test(Sale.count)){
-      if(!Sale.count > 0){
-        alert("Количество должна быть числом, которое больше 0")
-        return
-      }
-    }
+  }
 
-    let form = document.getElementById("editForm")
-    form.reset()
+  let form = document.getElementById("editForm")
+  form.reset()
 
-    let transaction = db.transaction(['Sales'], 'readwrite');
-    let sales = transaction.objectStore('Sales');
-
+  let transaction = db.transaction(['Sales'], 'readwrite');
+  let sales = transaction.objectStore('Sales');
+  if(document.getElementById('editModal').dataset.action == "edit"){
     request = sales.put(Sale);
   } else {
-    const newSale = {
-      name: document.getElementById('edit-name').value,
-      price: Number(document.getElementById('edit-price').value),
-      costPrice: Number(document.getElementById('edit-costPrice').value),
-      count: Number(document.getElementById('edit-count').value),
-      date: dateToString(document.getElementById('edit-date').value),
-      revenue: (Number(document.getElementById('edit-price').value) - Number(document.getElementById('edit-costPrice').value)) * Number(document.getElementById('edit-count').value)
-    };
-
-    if(!/^[а-яА-Я0-9\s]+$/.test(newSale.name)){
-      alert("Имя должно содержать только буквы или цифры")
-      return
-    }
-    if(!/^[0-9]+$/.test(newSale.price)){
-      if(newSale.price < 0){
-        alert("Цена должна быть числом, которое больше 0")
-        return
-      }
-    }
-    if(!/^[0-9]+$/.test(newSale.costPrice)){
-      if(newSale.costPrice < 0){
-        alert("Себестоимость должна быть числом, которое больше 0")
-        return
-      }
-    }
-    if(!/^[0-9]+$/.test(newSale.count)){
-      if(newSale.count < 0){
-        alert("Количество должна быть числом, которое больше 0")
-        return
-      }
-    }
-
-    let form = document.getElementById("editForm")
-    form.reset()
-
-    let transaction = db.transaction(['Sales'], 'readwrite');
-    let sales = transaction.objectStore('Sales');
-
-    request = sales.add(newSale);
+    
+    request = sales.add(Sale);
   }
 
   request.onsuccess = function () {
