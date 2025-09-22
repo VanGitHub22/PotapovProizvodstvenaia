@@ -329,63 +329,111 @@ exit.addEventListener("click", () => {
 /*Графики через библиотеку ApexCharts*/
 
 
-let columnChart = null;
-let pieChart = null;
+let barChart = null;   // экземпляр столбчатого графика
+let pieChart = null;   // экземпляр кругового графика
 
 function createColumnGraph(year) {
-  let transaction = db.transaction(['Sales'], 'readonly');
-  let sales = transaction.objectStore('Sales');
-  let request = sales.getAll();
+  const transaction = db.transaction(['Sales'], 'readonly');
+  const sales = transaction.objectStore('Sales');
+  const request = sales.getAll();
 
   request.onsuccess = function () {
-    let result = request.result;
-    let salesInChoosedYear = result.filter(sale => {
-      let date = stringFortDate(sale.date);
+    const result = request.result;
+    const salesInChoosedYear = result.filter(sale => {
+      const date = stringFortDate(sale.date);
       return date.getFullYear() === year;
     });
+
+    // Сортировка по дате
     salesInChoosedYear.sort((a, b) => {
-      let [dayA, monthA, yearA] = a.date.split('.').map(Number);
-      let [dayB, monthB, yearB] = b.date.split('.').map(Number);
+      const [dayA, monthA, yearA] = a.date.split('.').map(Number);
+      const [dayB, monthB, yearB] = b.date.split('.').map(Number);
       return new Date(yearA, monthA - 1, dayA) - new Date(yearB, monthB - 1, dayB);
     });
 
-    let limitResult = salesInChoosedYear.slice(0, 7);
-    let items = limitResult.map(sale => sale.name);
-    let itemsPrices = limitResult.map(sale => sale.revenue);
+    // Берём топ-7 товаров
+    const limitResult = salesInChoosedYear.slice(0, 7);
+    const items = limitResult.map(sale => sale.name);
+    const revenues = limitResult.map(sale => sale.revenue);
 
-    const options = {
-      chart: { type: 'bar', height: 450 },
-      series: [{ name: 'Выручка', data: itemsPrices }],
-      xaxis: { categories: items },
-      title: { text: `Топ-7 товаров ${year} года`, align: 'center' }
-    };
-    if (columnChart) {
-      columnChart.updateOptions(options, true);
+    const ctx = document.getElementById('chart').getContext('2d');
+
+    // Настройки цветов (можно генерировать или задать)
+    const backgroundColors = items.map(() => randomColor());
+
+    if (barChart) {
+      // Обновляем данные существующего графика
+      barChart.data.labels = items;
+      barChart.data.datasets[0].data = revenues;
+      barChart.data.datasets[0].backgroundColor = backgroundColors;
+      barChart.options.plugins.title.text = `Топ-7 товаров ${year} года`;
+      barChart.update(); // перерисовка
     } else {
-      columnChart = new ApexCharts(document.querySelector("#chart"), options);
-      columnChart.render();
+      // Создаём новый график
+      barChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: items,
+          datasets: [{
+            label: 'Выручка (₽)',
+            data: revenues,
+            backgroundColor: backgroundColors,
+            borderWidth: 1
+          }]
+        },
+        options: {
+          responsive: true,
+          plugins: {
+            title: {
+              display: true,
+              text: `Топ-7 товаров ${year} года`
+            },
+            legend: {
+              display: true,
+              position: 'top'
+            }
+          },
+          scales: {
+            y: {
+              beginAtZero: true,
+              title: {
+                display: true,
+                text: 'Выручка'
+              }
+            },
+            x: {
+              title: {
+                display: true,
+                text: 'Товары'
+              }
+            }
+          }
+        }
+      });
     }
   };
 
-  request.onerror = function () {
+  request.onerror = () => {
     console.error("Ошибка при загрузке продаж:", request.error);
   };
 }
 
 function createPieGraph(year) {
-  let transaction = db.transaction(['Sales'], 'readonly');
-  let sales = transaction.objectStore('Sales');
-  let request = sales.getAll();
+  const transaction = db.transaction(['Sales'], 'readonly');
+  const sales = transaction.objectStore('Sales');
+  const request = sales.getAll();
 
   request.onsuccess = function () {
-    let result = request.result;
-    let salesInChoosedYear = result.filter(sale => {
-      let date = stringFortDate(sale.date);
+    const result = request.result;
+    const salesInChoosedYear = result.filter(sale => {
+      const date = stringFortDate(sale.date);
       return date.getFullYear() === year;
     });
+
+    // Доход по месяцам
     const perMonth = Array(12).fill(0);
     salesInChoosedYear.forEach(sale => {
-      let [day, month, year] = sale.date.split('.').map(Number);
+      const [day, month, year] = sale.date.split('.').map(Number);
       perMonth[month - 1] += sale.revenue;
     });
 
@@ -394,29 +442,54 @@ function createPieGraph(year) {
     const colors = ['#45FF4B', '#FFC445', '#FF7745', '#BB45FF', '#FFF945', '#4579FF',
                     '#153483', '#45ffc1', '#451a5e', '#1a0049', '#00420b', '#5c0045'];
 
-    const options2 = {
-      chart: { type: 'pie', height: 400 },
-      series: perMonth,
-      labels: labels,
-      colors: colors,
-      title: { text: `Доход по месяцам (${year})`, align: 'center' },
-      legend: { position: 'bottom' },
-      responsive: [{
-        breakpoint: 480,
-        options: { legend: { position: 'bottom' } }
-      }]
-    };
+    const ctx2 = document.getElementById('chart2').getContext('2d');
+
     if (pieChart) {
-      pieChart.updateOptions(options2, true);
+      // Обновляем данные
+      pieChart.data.labels = labels;
+      pieChart.data.datasets[0].data = perMonth;
+      pieChart.options.plugins.title.text = `Доход по месяцам (${year})`;
+      pieChart.update();
     } else {
-      pieChart = new ApexCharts(document.querySelector("#chart2"), options2);
-      pieChart.render();
+      // Создаём круговой график
+      pieChart = new Chart(ctx2, {
+        type: 'pie',
+        data: {
+          labels: labels,
+          datasets: [{
+            label: 'Выручка',
+            data: perMonth,
+            backgroundColor: colors,
+            hoverOffset: 4
+          }]
+        },
+        options: {
+          responsive: true,
+          plugins: {
+            title: {
+              display: true,
+              text: `Доход по месяцам (${year})`
+            },
+            legend: {
+              position: 'bottom'
+            }
+          }
+        }
+      });
     }
   };
 
-  request.onerror = function () {
+  request.onerror = () => {
     console.error("Ошибка при загрузке продаж:", request.error);
   };
+}
+function randomColor() {
+  const letters = '0123456789ABCDEF';
+  let color = '#';
+  for (let i = 0; i < 6; i++) {
+    color += letters[Math.floor(Math.random() * 16)];
+  }
+  return color;
 }
 
 

@@ -241,6 +241,7 @@ footer{
     align-items: center; 
     justify-content: space-between;
     margin-top: 30px;
+    margin-bottom: 30px;
 }
 
 select{
@@ -251,13 +252,21 @@ select{
     border-radius: 5px;
 }
 
+.chart-container{
+    width: 60%;
+}
+
+.chart-container2{
+    width: 40%;
+    padding-bottom: 50px;
+}
+
 #chart{
-    width: 50%;
+    width: 100%;
 }
 
 #chart2{
-    width: 50%;
-    padding-bottom: 70px;
+    width: 100%;
 }
 
 
