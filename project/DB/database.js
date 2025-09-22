@@ -439,8 +439,7 @@ function createPieGraph(year) {
 
     const labels = ['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь',
                     'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'];
-    const colors = ['#45FF4B', '#FFC445', '#FF7745', '#BB45FF', '#FFF945', '#4579FF',
-                    '#153483', '#45ffc1', '#451a5e', '#1a0049', '#00420b', '#5c0045'];
+    const colors = labels.map(() => randomColor());
 
     const ctx2 = document.getElementById('chart2').getContext('2d');
 
