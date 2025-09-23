@@ -1,0 +1,54 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\VanMik\\Desktop\\\u041D\u043E\u0432\u0430\u044F \u043F\u0430\u043F\u043A\u0430\\PotapovProizvodstvenaia\\learning\\TypeScript\\1.2\\NodeConsoleApp1\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{3B57A68F-9EC4-BEC6-55B6-0C9387F111EE}|NodeConsoleApp1.esproj|c:\\users\\vanmik\\desktop\\\u043D\u043E\u0432\u0430\u044F \u043F\u0430\u043F\u043A\u0430\\potapovproizvodstvenaia\\learning\\typescript\\1.2\\nodeconsoleapp1\\tsconfig.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{3B57A68F-9EC4-BEC6-55B6-0C9387F111EE}|NodeConsoleApp1.esproj|solutionrelative:tsconfig.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3B57A68F-9EC4-BEC6-55B6-0C9387F111EE}|NodeConsoleApp1.esproj|c:\\users\\vanmik\\desktop\\\u043D\u043E\u0432\u0430\u044F \u043F\u0430\u043F\u043A\u0430\\potapovproizvodstvenaia\\learning\\typescript\\1.2\\nodeconsoleapp1\\app.ts||{0F2454B1-A556-402D-A7D0-1FDE7F99DEE0}",
+      "RelativeMoniker": "D:0:0:{3B57A68F-9EC4-BEC6-55B6-0C9387F111EE}|NodeConsoleApp1.esproj|solutionrelative:app.ts||{0F2454B1-A556-402D-A7D0-1FDE7F99DEE0}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 0,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "tsconfig.json",
+              "DocumentMoniker": "C:\\Users\\VanMik\\Desktop\\\u041D\u043E\u0432\u0430\u044F \u043F\u0430\u043F\u043A\u0430\\PotapovProizvodstvenaia\\learning\\TypeScript\\1.2\\NodeConsoleApp1\\tsconfig.json",
+              "RelativeDocumentMoniker": "tsconfig.json",
+              "ToolTip": "C:\\Users\\VanMik\\Desktop\\\u041D\u043E\u0432\u0430\u044F \u043F\u0430\u043F\u043A\u0430\\PotapovProizvodstvenaia\\learning\\TypeScript\\1.2\\NodeConsoleApp1\\tsconfig.json",
+              "RelativeToolTip": "tsconfig.json",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2025-09-22T06:36:19.471Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "app.ts",
+              "DocumentMoniker": "C:\\Users\\VanMik\\Desktop\\\u041D\u043E\u0432\u0430\u044F \u043F\u0430\u043F\u043A\u0430\\PotapovProizvodstvenaia\\learning\\TypeScript\\1.2\\NodeConsoleApp1\\app.ts",
+              "RelativeDocumentMoniker": "app.ts",
+              "ToolTip": "C:\\Users\\VanMik\\Desktop\\\u041D\u043E\u0432\u0430\u044F \u043F\u0430\u043F\u043A\u0430\\PotapovProizvodstvenaia\\learning\\TypeScript\\1.2\\NodeConsoleApp1\\app.ts",
+              "RelativeToolTip": "app.ts",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAqwAgAAAAgAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003213|",
+              "WhenOpened": "2025-09-22T06:30:06.842Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
