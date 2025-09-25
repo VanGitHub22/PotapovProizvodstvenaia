@@ -55,6 +55,7 @@ function stringFortDate(date){
 
 let add_btn = document.querySelector(".add_btn")
 add_btn.addEventListener("click", () => {
+  document.getElementById("edith3").innerHTML = "Добавить продажу"
   document.getElementById('editModal').dataset.action = "add"
   document.getElementById('editModal').style.display = 'block';
   document.getElementById('modalOverlay').style.display = 'block';
@@ -191,6 +192,7 @@ function openModal(id, action) {
 
   let request = sales.get(id);
   if(action == "edit"){
+    document.getElementById("edith3").innerHTML = "Редактировать продажу"
     request.onsuccess = function () {
       document.getElementById('editModal').dataset.action = "edit"
       let sale = request.result;
@@ -213,17 +215,31 @@ function openModal(id, action) {
 
 
 function mainForm(){
+  let Sale;
+  if(document.getElementById('editModal').dataset.action == "edit"){
+    const id = Number(document.getElementById('edit-id').value);
+    Sale = {
+      
+      id: id,
+      name: document.getElementById('edit-name').value,
+      price: Number(document.getElementById('edit-price').value),
+      costPrice: Number(document.getElementById('edit-costPrice').value),
+      count: Number(document.getElementById('edit-count').value),
+      date: dateToString(document.getElementById('edit-date').value),
+      revenue: (Number(document.getElementById('edit-price').value) - Number(document.getElementById('edit-costPrice').value)) * Number(document.getElementById('edit-count').value)
+    };
+    
+  } else {
+    Sale = {
+      name: document.getElementById('edit-name').value,
+      price: Number(document.getElementById('edit-price').value),
+      costPrice: Number(document.getElementById('edit-costPrice').value),
+      count: Number(document.getElementById('edit-count').value),
+      date: dateToString(document.getElementById('edit-date').value),
+      revenue: (Number(document.getElementById('edit-price').value) - Number(document.getElementById('edit-costPrice').value)) * Number(document.getElementById('edit-count').value)
+    };
+  }
   let request;
-  const id = Number(document.getElementById('edit-id').value);
-  const Sale = {
-    id: id,
-    name: document.getElementById('edit-name').value,
-    price: Number(document.getElementById('edit-price').value),
-    costPrice: Number(document.getElementById('edit-costPrice').value),
-    count: Number(document.getElementById('edit-count').value),
-    date: dateToString(document.getElementById('edit-date').value),
-    revenue: (Number(document.getElementById('edit-price').value) - Number(document.getElementById('edit-costPrice').value)) * Number(document.getElementById('edit-count').value)
-  };
 
   if(!/^[а-яА-Я0-9\s]+$/.test(Sale.name)){
     alert("Имя должно содержать только буквы или цифры")
