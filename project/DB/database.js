@@ -216,10 +216,19 @@ function openModal(id, action) {
 
 function mainForm(){
   let Sale;
+  const today = new Date()
+  const weekAgo = new Date(today);
+  const weekPast = new Date(today);
+  weekAgo.setDate(today.getDate() - 7);
+  weekPast.setDate(today.getDate() + 7);
   if(document.getElementById('editModal').dataset.action == "edit"){
     const id = Number(document.getElementById('edit-id').value);
+    const date = new Date(document.getElementById('edit-date').value)
+    if(date.getTime() < weekAgo.getTime() || date.getTime() > weekPast.getTime()){
+      alert("Дата не дольжна превышать неделю от сегодняшнего дня")
+      return
+    }
     Sale = {
-      
       id: id,
       name: document.getElementById('edit-name').value,
       price: Number(document.getElementById('edit-price').value),
@@ -230,6 +239,11 @@ function mainForm(){
     };
     
   } else {
+    const date = new Date(document.getElementById('edit-date').value)
+    if(date.getTime() < weekAgo.getTime() || date.getTime() > weekPast.getTime()){
+      alert("Дата не дольжна превышать неделю от сегодняшнего дня")
+      return
+    }
     Sale = {
       name: document.getElementById('edit-name').value,
       price: Number(document.getElementById('edit-price').value),
